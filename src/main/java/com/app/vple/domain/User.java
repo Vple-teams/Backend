@@ -3,7 +3,6 @@ package com.app.vple.domain;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
 import com.app.vple.domain.enums.Role;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +56,9 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "commentWriter")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user")
+    private List<Language> languages;
 
     public User update(String name, String image, String age) {
         this.nickname = name;

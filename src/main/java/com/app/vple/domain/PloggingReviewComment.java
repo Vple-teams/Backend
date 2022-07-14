@@ -1,7 +1,5 @@
 package com.app.vple.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -9,18 +7,13 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "comments")
 @Getter
-@Builder
-@AllArgsConstructor
-public class Comment extends BaseTime {
-
-    public Comment() {}
+public class PloggingReviewComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private Long id;
+    @Column(name = "plogging_reivew_comment_id")
+    private  Long id;
 
     @Column(nullable = false)
     private String content;
@@ -34,9 +27,9 @@ public class Comment extends BaseTime {
     private String nickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "plogging_reivew_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Post post;
+    private PloggingReview ploggingReview;
 
     public void setUpdateContent(String content) {
         this.content = content;

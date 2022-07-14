@@ -33,9 +33,9 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String html;
 
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User postWriter;
 
     @Column(nullable = false)
@@ -52,12 +52,14 @@ public class Post extends BaseTime {
     private boolean isReviewPost; // 0: none, 1: review post
 
     @OneToMany(mappedBy = "post")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comment> comments;
 
     @Column(nullable = false)
     private Integer views;
 
+    @OneToMany(mappedBy = "post")
+    @Where(clause = "is_review_post = 1")
+    private List<PostReview> postReview;
 
     public void updatePost(PostUpdateDto updateDto) {
         this.title = updateDto.getTitle();

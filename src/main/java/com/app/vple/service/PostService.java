@@ -7,6 +7,7 @@ import com.app.vple.domain.dto.PostListDto;
 import com.app.vple.domain.dto.PostUpdateDto;
 import com.app.vple.domain.dto.PostUploadDto;
 import com.app.vple.repository.PostRepository;
+import com.app.vple.repository.PostReviewRepository;
 import com.app.vple.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    private final PostReviewRepository postReviewRepository;
+
     private final UserRepository userRepository;
 
     public List<PostListDto> findPost() {
@@ -37,16 +40,30 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostDetailDto findPostDetails(Long postId) {
-        Optional<Post> post = postRepository.findById(postId);
+    public List<PostListDto> findPostByCategory(boolean category) {
+        // 0: none, 1: review type
+        List<Post> postByCategory = postRepository.findAllByisReviewPost(category);
 
-        if(post.isPresent()) {
-            return post.stream().map(
-                    PostDetailDto::new
-            ).collect(Collectors.toList()).get(0);
+        if(postByCategory.isEmpty()) {
+            String type = category ? "후기" : "일반";
+            throw new ArrayIndexOutOfBoundsException(type + "에 속하는 게시글이 존재하지 않습니다.");
         }
 
-        throw new NoSuchElementException("해당 게시글이 존재하지 않습니다.");
+        return postByCategory.stream().map(
+                PostListDto::new
+        ).collect(Collectors.toList());
+    }
+
+    public PostDetailDto findPostDetails(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new NoSuchElementException("해당 게시글이 존재하지 않습니다.")
+        );
+
+        if (!post.isReviewPost())
+            return new PostDetailDto(post);
+
+        else
+            throw new IllegalStateException("해당 게시글이 존재하지 않습니다.");
     }
 
     @Transactional
@@ -75,8 +92,10 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("해당 게시글이 존재하지 않습니다.")
         );
+
         post.updatePost(updateDto);
         postRepository.save(post);
+
         return post.getTitle();
     }
 }
