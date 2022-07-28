@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/auth/user")
 public class UserController {
 
     private final UserOAuth2Service userService;
