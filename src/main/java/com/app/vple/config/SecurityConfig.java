@@ -35,9 +35,7 @@ public class SecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .logout().logoutSuccessUrl("/")
+                .logout().deleteCookies("JSESSIONID")
                 .and()
                 .oauth2Login().defaultSuccessUrl("/login-success").successHandler(oAuth2AuthenticationSuccessHandler)
                 .userInfoEndpoint().userService(userOAuth2Service);
