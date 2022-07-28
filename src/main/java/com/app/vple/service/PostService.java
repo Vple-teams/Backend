@@ -10,12 +10,14 @@ import com.app.vple.repository.PostRepository;
 import com.app.vple.repository.PostReviewRepository;
 import com.app.vple.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,15 +31,10 @@ public class PostService {
 
     private final UserRepository userRepository;
 
-    public List<PostListDto> findPost() {
-        List<Post> posts = postRepository.findAll();
+    public Page<PostListDto> findPost(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
 
-        if(posts.isEmpty())
-            throw new ArrayIndexOutOfBoundsException("게시글이 없습니다.");
-
-        return posts.stream()
-                .map(PostListDto::new)
-                .collect(Collectors.toList());
+        return posts.map(PostListDto::new);
     }
 
     public List<PostListDto> findPostByCategory(boolean category) {
