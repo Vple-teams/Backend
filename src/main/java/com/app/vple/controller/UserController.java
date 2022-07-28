@@ -1,14 +1,19 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.dto.UserDetailDto;
+import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.service.UserOAuth2Service;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
 
 
 @RequiredArgsConstructor
@@ -28,7 +33,28 @@ public class UserController {
 
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping
+    public ResponseEntity<?> userModify(@Validated @RequestBody UserUpdateDto userUpdateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder sb = new StringBuilder();
+            bindingResult.getAllErrors().forEach(objectError -> {
+                String message = objectError.getDefaultMessage();
+
+                sb.append(message);
+            });
+
+            return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
+            userService.modifyUser(loginUser.getEmail(), userUpdateDto);
+            return new ResponseEntity<>(loginUser.getEmail() + "님의 정보가 수정되었습니다.", HttpStatus.OK);
+        } catch (Exception e) { // 400 error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
