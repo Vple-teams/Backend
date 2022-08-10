@@ -41,7 +41,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(name = "likes_count")
+    @Formula(value = "(select count(*) from check_duplicated_post_likes where check_duplicated_post_likes.post_id = post_id)")
     private Integer likesCount;
 
     @Column(nullable = false)
@@ -54,7 +55,6 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
-    @Column(nullable = false)
     private Integer views;
 
     @OneToMany(mappedBy = "post")
@@ -65,5 +65,15 @@ public class Post extends BaseTime {
         this.title = updateDto.getTitle();
         this.html = updateDto.getHtml();
         this.isReviewPost = updateDto.isReviewPost();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.likesCount = this.likesCount == null ? 0 : this.likesCount;
+        this.views = this.views == null ? 0 : this.views;
+    }
+
+    public void addViews() {
+        this.views += 1;
     }
 }

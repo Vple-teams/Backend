@@ -1,4 +1,4 @@
-package com.app.vple.Util;
+package com.app.vple.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

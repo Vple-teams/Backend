@@ -1,11 +1,14 @@
 package com.app.vple.domain;
 
+import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
 import com.app.vple.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.URL;
@@ -18,6 +21,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
+@DynamicUpdate
 public class User extends BaseTime {
 
     public User() {}
@@ -61,9 +65,24 @@ public class User extends BaseTime {
     private List<Language> languages;
 
     public User update(String name, String image, String age) {
-        this.nickname = name;
-        this.image = image;
+
+        if (nickname.length() == 0) {
+            this.nickname = name;
+        }
+        if (image.length() == 0) {
+            this.image = image;
+        }
         this.age = Age.toAge(age);
+
+        return this;
+    }
+
+    public User update(UserUpdateDto updateInfo) {
+        this.nickname = updateInfo.getNickname();
+
+        if (updateInfo.getImage() != null) {
+            this.image = updateInfo.getImage();
+        }
 
         return this;
     }
