@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByisReviewPost(boolean isReviewPost);
+    Page<Post> findAllByIsReviewPost(boolean isReviewPost, Pageable pageable);
 
     Page<Post> findAll(Pageable pageable);
+
+    Page<Post> findByTitleContaining(String title, Pageable pageable);
 }
