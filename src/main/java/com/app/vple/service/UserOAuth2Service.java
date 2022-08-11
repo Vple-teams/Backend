@@ -64,24 +64,18 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
     }
 
     @Transactional
-    public User modifyUser(String email, UserUpdateDto updateInfo) throws Exception {
+    public void modifyUser(String email, UserUpdateDto updateInfo) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("해당 이메일이 없습니다."));
 
-        if (updateInfo.getNickname().equals(user.getNickname())) {
-            throw new IllegalAccessException("변경 사항이 없습니다.");
-        }
-
-        else if (updateInfo.getNickname().length() > 0) {
+        if (updateInfo.getNickname().length() > 0) {
             Optional<User> checkDuplicatedNickname = userRepository.findByNickname(updateInfo.getNickname());
 
             if (checkDuplicatedNickname.isPresent()) {
                 throw new IllegalAccessException("중복된 닉네임입니다.");
             }
         }
-
         user.update(updateInfo);
-
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }
