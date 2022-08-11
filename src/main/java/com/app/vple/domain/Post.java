@@ -1,7 +1,6 @@
 package com.app.vple.domain;
 
 import com.app.vple.domain.dto.PostUpdateDto;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -55,11 +55,15 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "post")
+    private List<HashTag> hashTags;
+
     private Integer views;
 
-    @OneToMany(mappedBy = "post")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
     @Where(clause = "is_review_post = 1")
-    private List<PostReview> postReview;
+    private Place place;
 
     public void updatePost(PostUpdateDto updateDto) {
         this.title = updateDto.getTitle();
