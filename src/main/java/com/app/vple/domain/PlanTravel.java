@@ -1,13 +1,21 @@
 package com.app.vple.domain;
 
 import com.app.vple.domain.enums.TourType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor
 public class PlanTravel {
+
+    public PlanTravel() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
