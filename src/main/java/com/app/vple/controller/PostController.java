@@ -1,10 +1,7 @@
 package com.app.vple.controller;
 
 
-import com.app.vple.domain.dto.PostDetailDto;
-import com.app.vple.domain.dto.PostListDto;
-import com.app.vple.domain.dto.PostUpdateDto;
-import com.app.vple.domain.dto.PostUploadDto;
+import com.app.vple.domain.dto.*;
 import com.app.vple.service.PostService;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +51,21 @@ public class PostController {
         }
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<?> postDetails(@PathVariable Long id) {
         try {
             PostDetailDto post = postService.findPostDetails(id);
             return new ResponseEntity<>(post, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> postDetailModify(@PathVariable Long id) {
+        try {
+            PostDetailUpdateDto postDetail = postService.findPostDetail(id);
+            return new ResponseEntity<>(postDetail, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
