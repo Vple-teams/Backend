@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.URL;
@@ -37,7 +36,7 @@ public class User extends BaseTime {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -77,14 +76,12 @@ public class User extends BaseTime {
         return this;
     }
 
-    public User update(UserUpdateDto updateInfo) {
+    public void update(UserUpdateDto updateInfo) {
         this.nickname = updateInfo.getNickname();
+        this.image = updateInfo.getImage() == null ? this.image : updateInfo.getImage();
+        this.gender = updateInfo.getGender() == null ? this.gender : Gender.toGender(updateInfo.getGender());
+        this.age = updateInfo.getAge() == null ? this.age : Age.toAge(updateInfo.getAge());
 
-        if (updateInfo.getImage() != null) {
-            this.image = updateInfo.getImage();
-        }
-
-        return this;
     }
 
     public String getRoleValue() {
