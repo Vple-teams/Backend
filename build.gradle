@@ -18,10 +18,10 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('springCloudGcpVersion', "3.3.0")
-    set('springCloudVersion', "2021.0.3")
-}
+//ext {
+//    set('springCloudGcpVersion', "3.3.0")
+//    set('springCloudVersion', "2021.0.3")
+//}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -42,12 +42,12 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
+//dependencyManagement {
+//    imports {
+//        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+//        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//    }
+//}
 
 tasks.named('test') {
     useJUnitPlatform()

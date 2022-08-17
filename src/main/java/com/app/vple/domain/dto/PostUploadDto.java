@@ -1,5 +1,6 @@
 package com.app.vple.domain.dto;
 
+import com.app.vple.domain.Place;
 import com.app.vple.domain.Post;
 import com.app.vple.domain.User;
 import lombok.Data;
@@ -22,10 +23,15 @@ public class PostUploadDto {
     @NotNull(message = "게시글의 카테고리가 필요합니다.")
     private boolean isReviewPost;
 
-    public Post toEntity(User user) {
+    private Long placeId;
+
+    public Post toEntity(User user, Place place) {
         return Post.builder()
                 .title(title)
                 .html(html)
+                .likesCount(0)
+                .views(0)
+                .place(place)
                 .isReviewPost(isReviewPost)
                 .nickname(user.getNickname())
                 .postWriter(user)
