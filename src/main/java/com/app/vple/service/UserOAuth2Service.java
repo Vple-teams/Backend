@@ -41,6 +41,7 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
+        System.out.println("user.getNickname() = " + user.getNickname());
         httpSession.setAttribute("user", new SessionLoginUser(user));
 
         return new DefaultOAuth2User(
@@ -76,6 +77,15 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
             }
         }
         user.update(updateInfo);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void modifyUserImage(String url, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("해당 이메일이 없습니다."));
+
+        user.update(url);
         userRepository.save(user);
     }
 }

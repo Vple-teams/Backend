@@ -1,6 +1,7 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.dto.UserDetailDto;
+import com.app.vple.domain.dto.UserProfileDto;
 import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.service.UserOAuth2Service;
 import com.app.vple.service.model.SessionLoginUser;
