@@ -42,7 +42,7 @@ jobs:
           distribution: 'temurin'
       - name: Add Oauth Secret
         run: |
-          printf $OAUTH_CONFIG >> src/main/resources/application-oauth2.properties
+          echo "$OAUTH_CONFIG" >> src/main/resources/application-oauth2.properties
           ls src/main/resources
         env:
           OAUTH_CONFIG: ${{ secrets.OAUTH_CONFIG }}
