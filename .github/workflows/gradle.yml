@@ -30,7 +30,7 @@ jobs:
           MYSQL_PASSWORD: rlatjdgns12
           MYSQL_ROOT_PASSWORD: rlatjdgns12
         ports:
-          - 33306:3306
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -44,3 +44,8 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
+      - name: Upload Files
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-reports
+          path: Backend/build/reports/tests/test/**
