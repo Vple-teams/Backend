@@ -44,8 +44,10 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
+      - name: print test results
+        run: cat build/test/TEST*.xml
       - name: Upload Files
         uses: actions/upload-artifact@v1
         with:
           name: test-reports
-          path: Backend/build/reports/tests/test/**
+          path: build/reports/tests/test/**
