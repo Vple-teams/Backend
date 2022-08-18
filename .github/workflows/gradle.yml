@@ -8,6 +8,7 @@
 name: Vple Spring boot & Gradle CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
