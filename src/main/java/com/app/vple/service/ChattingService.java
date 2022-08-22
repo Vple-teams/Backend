@@ -50,6 +50,13 @@ public class ChattingService {
                         () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
                 );
 
+        List<ChattingRoom> chattingRooms1 = chattingRoomRepository.findAllByUserANicknameOrUserBNickname(anotherNickname, me.getNickname());
+        List<ChattingRoom> chattingRooms2 = chattingRoomRepository.findAllByUserANicknameOrUserBNickname(me.getNickname(), anotherNickname);
+
+        if (!chattingRooms1.isEmpty() || !chattingRooms2.isEmpty()) {
+            throw new IllegalStateException("이미 채팅방이 생성되어 있습니다.");
+        }
+
         String sessionId = UUID.randomUUID().toString();
         ChattingRoom chattingRoom = ChattingRoom.builder()
                 .sessionId(sessionId)
@@ -93,6 +100,20 @@ public class ChattingService {
                 .build();
 
         chattingMessageRepository.save(chattingMessage);
+    }
+
+    @Transactional
+    public void deleteWebsocketSession(String nickname, Long id) {
+        ChattingRoom chattingRoom = chattingRoomRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("채팅방이 존재하지 않습니다.")
+        );
+
+        if (chattingRoom.getUserANickname().equals(nickname) || chattingRoom.getUserBNickname().equals(nickname)) {
+            chattingRoomRepository.delete(chattingRoom);
+        }
+        else {
+            throw new IllegalStateException("해당 채팅방의 참여자가 아닙니다.");
+        }
     }
 
     public List<ChattingRoomDto> findAllChattingRoom(String email) {
