@@ -12,4 +12,5 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long
     List<ChattingRoom> findAllByUserANicknameOrUserBNickname(String userANickname, String userBNickname);
 
     ChattingRoom getChattingRoomBySessionId(String sessionId);
+
 }

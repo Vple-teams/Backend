@@ -54,4 +54,15 @@ public class ChattingController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteChattingRoom(@PathVariable Long id) {
+        try {
+            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
+            chattingService.deleteWebsocketSession(loginUser.getName(), id);
+            return new ResponseEntity<>("", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

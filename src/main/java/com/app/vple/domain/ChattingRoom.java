@@ -4,6 +4,8 @@ package com.app.vple.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -36,6 +38,7 @@ public class ChattingRoom {
     private String userBNickname;
 
     @OneToMany(mappedBy = "room")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ChattingMessage> messages;
 
     @Column(nullable = false, name = "session_id")
