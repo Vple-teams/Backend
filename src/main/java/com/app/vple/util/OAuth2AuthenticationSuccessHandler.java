@@ -1,4 +1,4 @@
-package com.app.vple.Util;
+package com.app.vple.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        String url = "http://localhost:3000/logout";
+        String url = "https://localhost:3000/logout";
 
         if (response.isCommitted())
             return;

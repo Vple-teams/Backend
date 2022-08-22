@@ -1,16 +1,13 @@
 package com.app.vple.config;
 
-import com.app.vple.Util.OAuth2AuthenticationSuccessHandler;
+import com.app.vple.util.OAuth2AuthenticationSuccessHandler;
 import com.app.vple.service.UserOAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,13 +28,16 @@ public class SecurityConfig {
 
         http.csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/auth/**").authenticated()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("*").permitAll()
+                .antMatchers("/ws/**").permitAll()
+                .antMatchers("/api/v1/auth/**","/",
+                        "/v2/api-docs", "/swagger-resources/**", "/swagger-ui/index.html", "/swagger-ui.html","/webjars/**", "/swagger/**",   // swagger
+                        "/h2-console/**",
+                        "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .logout().logoutSuccessUrl("/")
+                .logout().deleteCookies("JSESSIONID")
                 .and()
                 .oauth2Login().defaultSuccessUrl("/login-success").successHandler(oAuth2AuthenticationSuccessHandler)
                 .userInfoEndpoint().userService(userOAuth2Service);

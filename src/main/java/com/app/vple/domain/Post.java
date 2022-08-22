@@ -1,7 +1,6 @@
 package com.app.vple.domain;
 
 import com.app.vple.domain.dto.PostUpdateDto;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,7 +41,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(name = "likes_count")
+    @Formula(value = "(select count(*) from check_duplicated_post_likes where check_duplicated_post_likes.post_id = post_id)")
     private Integer likesCount;
 
     @Column(nullable = false)
@@ -54,16 +55,29 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "post")
+    private List<HashTag> hashTags;
+
     private Integer views;
 
-    @OneToMany(mappedBy = "post")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
     @Where(clause = "is_review_post = 1")
-    private List<PostReview> postReview;
+    private Place place;
 
     public void updatePost(PostUpdateDto updateDto) {
         this.title = updateDto.getTitle();
         this.html = updateDto.getHtml();
         this.isReviewPost = updateDto.isReviewPost();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.likesCount = this.likesCount == null ? 0 : this.likesCount;
+        this.views = this.views == null ? 0 : this.views;
+    }
+
+    public void addViews() {
+        this.views += 1;
     }
 }
