@@ -23,7 +23,6 @@ public class OAuthAttributes {
     private final String age;
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        System.out.println("registrationId = " + registrationId);
 
         if("naver".equals(registrationId)) {
             return ofNaver("id", attributes);
@@ -81,7 +80,6 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
-        System.out.println("attributes = " + attributes);
 
         return User.builder()
                 .nickname(name)

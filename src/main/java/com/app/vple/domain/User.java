@@ -84,6 +84,10 @@ public class User extends BaseTime {
 
     }
 
+    public void update(String url) {
+        this.image = url;
+    }
+
     public String getRoleValue() {
         return this.myRole.getValue();
     }
