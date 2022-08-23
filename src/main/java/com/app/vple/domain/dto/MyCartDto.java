@@ -18,6 +18,7 @@ public class MyCartDto {
     private String image;
 
     public MyCartDto(Cart entity) {
+        this.id = entity.getId();
         this.name = entity.getName();
         this.address = entity.getAddress();
         this.image = entity.getImage();

@@ -3,7 +3,6 @@ package com.app.vple.controller;
 import com.app.vple.domain.Cart;
 import com.app.vple.domain.dto.CartAddDto;
 import com.app.vple.domain.dto.MyCartDto;
-import com.app.vple.domain.dto.MyPlansDto;
 import com.app.vple.service.CartService;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/cart")
+@RequestMapping("/auth/cart")
 public class CartController {
 
     private final HttpSession httpSession;
@@ -25,18 +24,18 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping
-    public ResponseEntity<?> planList() {
+    public ResponseEntity<?> cartList() {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            List<MyCartDto> plans = cartService.findCart(loginUser.getEmail());
-            return new ResponseEntity<>(plans, HttpStatus.OK);
+            List<MyCartDto> cart = cartService.findCart(loginUser.getEmail());
+            return new ResponseEntity<>(cart, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> planAdd(@Validated @RequestBody CartAddDto cartAddDto) {
+    public ResponseEntity<?> cartAdd(@Validated @RequestBody CartAddDto cartAddDto) {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
             String email = loginUser.getEmail();
@@ -48,7 +47,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> planRemove(@PathVariable Long id) {
+    public ResponseEntity<?> cartRemove(@PathVariable Long id) {
         try {
             String name = cartService.removeCart(id);
             return new ResponseEntity<>(name + "을 삭제했습니다.", HttpStatus.OK);

@@ -24,7 +24,7 @@ public class PlanDetailDto {
 
     private boolean isOpened;
 
-    private int likes;
+    private Integer likesCount;
 
     public PlanDetailDto(Plan entity) {
         this.title = entity.getTitle();
@@ -37,6 +37,6 @@ public class PlanDetailDto {
                 .map(PlanTravelDto::new)
                 .collect(Collectors.toList());
         this.isOpened = entity.isOpened();
-        this.likes = entity.getLikes();
+        this.likesCount = entity.getLikesCount();
     }
 }
