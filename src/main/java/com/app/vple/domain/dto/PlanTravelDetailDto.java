@@ -16,11 +16,14 @@ public class PlanTravelDetailDto {
 
     private String image;
 
+    private int day;
+
     public PlanTravelDetailDto(PlanTravel entity) {
         this.name = entity.getName();
         this.address = entity.getAddress();
         this.longitude = entity.getLongitude();
         this.latitude = entity.getLatitude();
         this.image = entity.getImage();
+        this.day = entity.getDay();
     }
 }
