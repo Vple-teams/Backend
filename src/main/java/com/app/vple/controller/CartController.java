@@ -2,6 +2,7 @@ package com.app.vple.controller;
 
 import com.app.vple.domain.Cart;
 import com.app.vple.domain.dto.CartAddDto;
+import com.app.vple.domain.dto.CartDetailDto;
 import com.app.vple.domain.dto.MyCartDto;
 import com.app.vple.service.CartService;
 import com.app.vple.service.model.SessionLoginUser;
@@ -28,6 +29,16 @@ public class CartController {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
             List<MyCartDto> cart = cartService.findCart(loginUser.getEmail());
+            return new ResponseEntity<>(cart, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> cartDetails(@PathVariable Long id) {
+        try {
+            CartDetailDto cart = cartService.findCartDetails(id);
             return new ResponseEntity<>(cart, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

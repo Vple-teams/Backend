@@ -3,6 +3,7 @@ package com.app.vple.service;
 import com.app.vple.domain.Cart;
 import com.app.vple.domain.User;
 import com.app.vple.domain.dto.CartAddDto;
+import com.app.vple.domain.dto.CartDetailDto;
 import com.app.vple.domain.dto.MyCartDto;
 import com.app.vple.repository.CartRepository;
 import com.app.vple.repository.UserRepository;
@@ -36,6 +37,14 @@ public class CartService {
         return cartByUser.stream().map(
                 MyCartDto::new
         ).collect(Collectors.toList());
+    }
+
+    public CartDetailDto findCartDetails(Long id) {
+        Cart cart = cartRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("해당 여행지가 존재하지 않습니다.")
+        );
+
+        return new CartDetailDto(cart);
     }
 
     public String addPlan(CartAddDto cartAddDto, String email) {
