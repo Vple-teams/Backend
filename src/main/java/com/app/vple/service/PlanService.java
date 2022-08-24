@@ -1,11 +1,13 @@
 package com.app.vple.service;
 
+import com.app.vple.domain.CheckDuplicatedPlanLike;
 import com.app.vple.domain.Plan;
 import com.app.vple.domain.User;
 import com.app.vple.domain.dto.MyPlansDto;
 import com.app.vple.domain.dto.PlanCreateDto;
 import com.app.vple.domain.dto.PlanDetailDto;
 import com.app.vple.domain.dto.PlanUpdateDto;
+import com.app.vple.repository.CheckDuplicatedPlanLikeRepository;
 import com.app.vple.repository.PlanRepository;
 import com.app.vple.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ public class PlanService {
     private final PlanRepository planRepository;
 
     private final UserRepository userRepository;
+
+    private final CheckDuplicatedPlanLikeRepository checkDuplicatedPlanLikeRepository;
 
     public List<MyPlansDto> findPlan(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -78,5 +82,28 @@ public class PlanService {
         planRepository.save(plan);
 
         return plan.getTitle();
+    }
+
+    public String changePlanLike(Long id, String email) {
+        Plan plan = planRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("해당 플랜이 존재하지 않습니다.")
+        );
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new NoSuchElementException("해당 사용자가 존재하지 않습니다.")
+        );
+
+        CheckDuplicatedPlanLike planLike = checkDuplicatedPlanLikeRepository.findByUserAndPlan(user, plan)
+                .orElse(null);
+
+        if (planLike == null) {
+            checkDuplicatedPlanLikeRepository.save(new CheckDuplicatedPlanLike(user, plan));
+            return plan.getTitle() + "좋아요 + 1";
+        }
+        else {
+            checkDuplicatedPlanLikeRepository.delete(planLike);
+            return plan.getTitle() + "좋아요 취소";
+        }
+
     }
 }
