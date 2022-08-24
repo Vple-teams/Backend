@@ -8,6 +8,7 @@
 name: Vple Spring boot & Gradle CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
@@ -18,8 +19,19 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: VPLE
+          MYSQL_USER: test
+          MYSQL_PASSWORD: rlatjdgns12
+          MYSQL_ROOT_PASSWORD: rlatjdgns12
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +40,23 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+      - name: Add Oauth Secret
+        run: |
+          echo "$OAUTH_CONFIG" >> src/main/resources/application-oauth2.properties
+        env:
+          OAUTH_CONFIG: ${{ secrets.OAUTH_CONFIG }}
+      - name: Add GeoCoding Secret
+        run: |
+          echo "$GEO_CONFIG" >> src/main/resources/application-geocoding.properties
+        env:
+          GEO_CONFIG: ${{ secrets.GEO_CONFIG }}
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
+      - name: Upload Files
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-reports
+          path: build/reports/tests/test
