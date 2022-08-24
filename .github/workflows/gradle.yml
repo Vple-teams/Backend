@@ -45,6 +45,12 @@ jobs:
           echo "$OAUTH_CONFIG" >> src/main/resources/application-oauth2.properties
         env:
           OAUTH_CONFIG: ${{ secrets.OAUTH_CONFIG }}
+      - name: Add GeoCoding Secret
+        run: |
+          echo "$GEO_CONFIG" >> src/main/resources/application-geocoding.properties
+        env:
+          GEO_CONFIG: ${{ secrets.GEO_CONFIG }}
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
