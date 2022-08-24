@@ -1,5 +1,7 @@
 package com.app.vple.domain.dto;
 
+import com.app.vple.domain.HashTag;
+import com.app.vple.domain.Place;
 import com.app.vple.domain.Post;
 import lombok.Data;
 
@@ -28,6 +30,10 @@ public class PostDetailDto {
 
     private Integer views;
 
+    private PlaceDto place;
+
+    private List<String> hashTag;
+
     public PostDetailDto(Post entity) {
         this.commentCount = entity.getCommentCount();
         this.title = entity.getTitle();
@@ -40,5 +46,9 @@ public class PostDetailDto {
         ).collect(Collectors.toList());
         this.createdDate = entity.getCreatedDate();
         this.views = entity.getViews();
+        this.place = new PlaceDto(entity.getPlace());
+        this.hashTag = entity.getHashTags().stream().map(
+                HashTag::getHashTag
+        ).collect(Collectors.toList());
     }
 }

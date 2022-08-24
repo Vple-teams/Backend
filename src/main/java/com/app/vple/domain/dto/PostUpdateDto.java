@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 public class PostUpdateDto {
@@ -19,4 +20,6 @@ public class PostUpdateDto {
 
     @NotNull(message = "게시글의 카테고리가 필요합니다.")
     private boolean isReviewPost;
+
+    private List<String> hashTags;
 }
