@@ -88,7 +88,7 @@ public class PostController {
 
     @GetMapping("/auth/post/search")
     public ResponseEntity<?> postSearch(
-            @PageableDefault(size = 8, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = PAGE_SIZE, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(name = "keyword") String keyword) {
         try {
             Page<PostListDto> posts = postService.searchPost(keyword, pageable);
