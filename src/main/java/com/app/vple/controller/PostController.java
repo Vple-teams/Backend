@@ -14,21 +14,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/post")
 public class PostController {
 
     private final HttpSession httpSession;
 
     private final PostService postService;
 
-    @GetMapping
+    @GetMapping("/api/post")
     public ResponseEntity<?> postList(
             @PageableDefault(size = 8, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
@@ -40,22 +41,30 @@ public class PostController {
         }
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<?> postCategoryList(
-            @PageableDefault(size = 8, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(name = "category") String category) {
+    @GetMapping("/api/post/category")
+    public ResponseEntity<?> postCategoryList(@RequestParam(name = "category") String category) {
 
         try {
             boolean flag = category.equals("review"); // review, none
-            Page<PostListDto> postByCategory = postService.findPostByCategory(flag, pageable);
+            List<PostListDto> postByCategory = postService.findPostByCategory(flag);
             return new ResponseEntity<>(postByCategory, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+    @GetMapping("/api/post/hashtag")
+    public ResponseEntity<?> postHashtagList(@RequestParam(name = "keyword") String hashtag) {
+        try {
+            List<PostListDto> hashtagPost = postService.findHashtagPost(hashtag);
+            return new ResponseEntity<>(hashtagPost, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("/auth/post/{id}")
     public ResponseEntity<?> postDetails(@PathVariable Long id) {
         try {
             PostDetailDto post = postService.findPostDetails(id);
@@ -65,19 +74,17 @@ public class PostController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> postSearch(
-            @PageableDefault(size = 8, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(name = "keyword") String keyword) {
+    @GetMapping("/auth/post/search")
+    public ResponseEntity<?> postSearch(@RequestParam(name = "keyword") String keyword) {
         try {
-            Page<PostListDto> posts = postService.searchPost(keyword, pageable);
+            List<PostListDto> posts = postService.searchPost(keyword);
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping
+    @PostMapping("/auth/post")
     public ResponseEntity<?> postAdd(@Validated @RequestBody PostUploadDto postUploadDto) {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
@@ -89,7 +96,7 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/auth/post/{id}")
     public ResponseEntity<?> postRemove(@PathVariable Long id) {
         try {
             String title = postService.removePost(id);
@@ -99,7 +106,7 @@ public class PostController {
         }
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/auth/post/{id}")
     public ResponseEntity<?> postModify(@PathVariable Long id,
                                         @Validated @RequestBody PostUpdateDto postUpdateDto) {
         try {
@@ -110,7 +117,7 @@ public class PostController {
         }
     }
 
-    @PatchMapping("/like/{id}")
+    @PatchMapping("/auth/post/like/{id}")
     public ResponseEntity<?> postLikeAdd(@PathVariable Long id) {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");

@@ -58,7 +58,6 @@ public class Post extends BaseTime {
     private Integer views;
 
     @OneToMany(mappedBy = "post")
-    @Where(clause = "is_review_post = 1")
     private List<PostReview> postReview;
 
     public void updatePost(PostUpdateDto updateDto) {

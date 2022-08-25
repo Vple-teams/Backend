@@ -2,6 +2,7 @@ package com.app.vple.domain.dto;
 
 
 import com.app.vple.domain.Comment;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class CommentDto {
 
     private String nickname;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
     public CommentDto(Comment entity) {

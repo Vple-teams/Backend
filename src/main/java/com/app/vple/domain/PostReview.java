@@ -22,7 +22,7 @@ public class PostReview {
     @Column(name = "hashtag_name")
     private String hashTag;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;

@@ -30,8 +30,6 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final PostReviewRepository postReviewRepository;
-
     private final UserRepository userRepository;
 
     private final CheckDuplicatedPostLikeRepository checkDuplicatedPostLikeRepository;
@@ -42,16 +40,16 @@ public class PostService {
         return posts.map(PostListDto::new);
     }
 
-    public Page<PostListDto> findPostByCategory(boolean category, Pageable pageable) {
+    public List<PostListDto> findPostByCategory(boolean category) {
         // 0: none, 1: review type
-        Page<Post> postByCategory = postRepository.findAllByIsReviewPost(category, pageable);
+        List<Post> postByCategory = postRepository.findAllByIsReviewPost(category);
 
         if(postByCategory.isEmpty()) {
             String type = category ? "후기" : "일반";
             throw new ArrayIndexOutOfBoundsException(type + "에 속하는 게시글이 존재하지 않습니다.");
         }
 
-        return postByCategory.map(PostListDto::new);
+        return postByCategory.stream().map(PostListDto::new).collect(Collectors.toList());
     }
 
     @Transactional
@@ -124,12 +122,21 @@ public class PostService {
         }
     }
 
-    public Page<PostListDto> searchPost(String keyword, Pageable pageable) {
-        Page<Post> posts = postRepository.findByTitleContaining(keyword, pageable);
+    public List<PostListDto> searchPost(String keyword) {
+        List<Post> posts = postRepository.findByTitleContaining(keyword);
         if (posts.isEmpty()) {
             throw new NoSuchElementException("게시글이 존재하지 않습니다.");
         }
 
-        return posts.map(PostListDto::new);
+        return posts.stream().map(PostListDto::new).collect(Collectors.toList());
+    }
+
+    public List<PostListDto> findHashtagPost(String hashtag) {
+        // hashtag: 여행, 식당, 관광지, 플로깅, 펀딩
+        List<Post> hashtagPost = postRepository.findAllByHashTag(hashtag);
+
+        return hashtagPost.stream().map(
+                PostListDto::new
+        ).collect(Collectors.toList());
     }
 }

@@ -4,15 +4,19 @@ import com.app.vple.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findAllByIsReviewPost(boolean isReviewPost, Pageable pageable);
+    List<Post> findAllByIsReviewPost(boolean isReviewPost);
 
-    Page<Post> findAll(Pageable pageable);
+    List<Post> findAll();
 
-    Page<Post> findByTitleContaining(String title, Pageable pageable);
+    List<Post> findByTitleContaining(String title);
+
+    @Query("SELECT p from PostReview pr, Post p where p.isReviewPost = true and pr.hashTag like %:hashtag%")
+    List<Post> findAllByHashTag(String hashtag);
 }

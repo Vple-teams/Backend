@@ -1,9 +1,15 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.Post;
+import com.app.vple.domain.PostReview;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class PostListDto {
@@ -13,7 +19,8 @@ public class PostListDto {
     private String title;
 
     private String nickname;
-
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
     private Integer commentCount;
@@ -24,6 +31,8 @@ public class PostListDto {
 
     private Integer views;
 
+    private List<String> hashtags;
+
     public PostListDto(Post entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();
@@ -33,5 +42,10 @@ public class PostListDto {
         this.commentCount = entity.getCommentCount();
         this.isReviewPost = entity.isReviewPost();
         this.views = entity.getViews();
+        if (isReviewPost) {
+            this.hashtags = entity.getPostReview().stream().map(
+                    PostReview::getHashTag
+            ).collect(Collectors.toList());
+        }
     }
 }
