@@ -41,7 +41,6 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
-        System.out.println("user.getNickname() = " + user.getNickname());
         httpSession.setAttribute("user", new SessionLoginUser(user));
 
         return new DefaultOAuth2User(
