@@ -1,8 +1,8 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.HashTag;
-import com.app.vple.domain.Place;
 import com.app.vple.domain.Post;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,6 +26,7 @@ public class PostDetailDto {
 
     private List<CommentDto> comments;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
     private Integer views;
