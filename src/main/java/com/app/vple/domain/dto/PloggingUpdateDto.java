@@ -16,36 +16,33 @@ import java.util.List;
 public class PloggingUpdateDto {
 
     @NotBlank(message = "제목이 필요합니다.")
-    @Size(min = 2, max = 20, message = "제목의 길이는 최소 2부터 최대 20까지입니다.")
+    @Size(min = 2, max = 40, message = "제목의 길이는 최소 2부터 최대 20까지입니다.")
     private String title;
 
     @NotNull(message = "본문이 비어있습니다.")
     @Size(min = 2)
     private String html;
 
-    @NotBlank(message = "시작 날짜를 정해주세요")
-    @Size(min = 2)
+    @NotNull(message = "시작 날짜를 정해주세요")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotBlank(message = "마감 날짜를 정해주세요")
-    @Size(min = 2)
+    @NotNull(message = "마감 날짜를 정해주세요")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @NotBlank(message = "실행 날짜를 정해주세요")
-    @Size(min = 2)
+    @NotNull(message = "실행 날짜를 정해주세요")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate executionDate;
 
-    @NotBlank(message = "큰 주소를 적어주세요")
+    @NotNull(message = "큰 주소를 적어주세요")
     @Size(min = 2)
     private String district;
 
-    @NotBlank(message = "작은 주소를 적어주세요")
+    @NotNull(message = "작은 주소를 적어주세요")
     @Size(min = 2)
     private String city;
 

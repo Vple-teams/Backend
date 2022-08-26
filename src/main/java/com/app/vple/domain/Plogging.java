@@ -20,6 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Plogging extends BaseTime {
 
+    public Plogging() {}
+
     @Id     // id 변수에 기본키 할당
     @GeneratedValue(strategy = GenerationType.IDENTITY)     // 데이터베이스에 기본키 생성 위임, sql사용하므로 IDENTITY속성 이용
     @Column(name = "plogging_id")
@@ -43,7 +45,7 @@ public class Plogging extends BaseTime {
     private Integer views = 0;      // 조회수
 
     @Column(nullable = false)
-    @Formula(value = "select count(*) from plogging_comments where plogging_comments.plogging_id = plogging_id")
+    @Formula(value = "(select count(*) from plogging_comments where plogging_comments.plogging_comment_id = plogging_id)")
     private Integer ploggingCommentCount;       //댓글 수
 
     @Column(nullable = false)

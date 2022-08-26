@@ -26,7 +26,7 @@ public class PloggingController {
 
     @GetMapping
     public ResponseEntity<?> ploggingList(
-            @PageableDefault(size = 8, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 8, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
         try {
             Page<PloggingListDto> ploggings = ploggingService.findPlogging(pageable);
@@ -59,7 +59,7 @@ public class PloggingController {
 
     @GetMapping("/search")
     public ResponseEntity<?> ploggingSearch(
-            @PageableDefault(size = 8, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 8, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(name = "keyword") String keyword) {
         try {
             Page<PloggingListDto> ploggings = ploggingService.searchPlogging(keyword, pageable);

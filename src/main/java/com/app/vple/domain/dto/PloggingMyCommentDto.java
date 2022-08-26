@@ -5,7 +5,7 @@ import com.app.vple.domain.PloggingComment;
 import lombok.Data;
 
 @Data
-public class PloggingMyCommentDto {
+public class  PloggingMyCommentDto {
     private Long id;
 
     private String content;

@@ -8,14 +8,14 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
-@Entity     // JPA가 관리하는 클래스, JPA를 사용해 테이블과 매핑할 클래스는 반드시 @Entity를 붙여야 한다.
+@Entity
 @Table(name = "comments")
 @Getter
 @Builder
 @AllArgsConstructor
 public class Comment extends BaseTime {
 
-    public Comment() {}     // 엔티티클래스는 파라미터 없는 public 또는 protected 생성자 필요
+    public Comment() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

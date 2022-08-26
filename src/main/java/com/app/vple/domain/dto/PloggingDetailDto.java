@@ -28,7 +28,7 @@ public class PloggingDetailDto extends BaseTime {
 
     private int totalPeople;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     private LocalDate startDate;
 
@@ -51,7 +51,7 @@ public class PloggingDetailDto extends BaseTime {
         this.views = entity.getViews();
         this.nowPeople = entity.getNowPeople();
         this.totalPeople = entity.getTotalPeople();
-        this.createDate = entity.getCreatedDate();
+        this.createdDate = entity.getCreatedDate();
         this.startDate = entity.getStartDate();
         this.endDate = entity.getEndDate();
         this.executionDate = entity.getExecutionDate();
