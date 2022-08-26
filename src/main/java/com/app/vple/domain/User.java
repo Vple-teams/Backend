@@ -4,6 +4,7 @@ import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
 import com.app.vple.domain.enums.Role;
+import com.app.vple.domain.enums.VeganType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,6 +64,10 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<Language> languages;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VeganType vegetarian;
+
     public User update(String name, String image, String age) {
 
         if (nickname.length() == 0) {
@@ -72,7 +77,6 @@ public class User extends BaseTime {
             this.image = image;
         }
         this.age = Age.toAge(age);
-
         return this;
     }
 
@@ -81,7 +85,7 @@ public class User extends BaseTime {
         this.image = updateInfo.getImage() == null ? this.image : updateInfo.getImage();
         this.gender = updateInfo.getGender() == null ? this.gender : Gender.toGender(updateInfo.getGender());
         this.age = updateInfo.getAge() == null ? this.age : Age.toAge(updateInfo.getAge());
-
+        this.vegetarian = updateInfo.getVegetarian() == null ? this.vegetarian : VeganType.valueOf(updateInfo.getVegetarian());
     }
 
     public void update(String url) {

@@ -24,7 +24,7 @@ public class PloggingCommentController {
     public ResponseEntity<?> PloggingCommentList() {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            List<PloggingMyCommentDto> ploggingComments = ploggingCommentService.findPloggingComment(loginUser.getEmail());
+            List<MyPloggingCommentDto> ploggingComments = ploggingCommentService.findPloggingComment(loginUser.getEmail());
             return new ResponseEntity<>(ploggingComments, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

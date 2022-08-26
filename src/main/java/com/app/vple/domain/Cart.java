@@ -1,6 +1,5 @@
 package com.app.vple.domain;
 
-import com.app.vple.domain.enums.TourType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,19 +12,19 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PlanTravel {
+public class Cart {
 
-    public PlanTravel() {}
+    public Cart() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "plan_travel_id")
+    @Column(name = "cart_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_id")
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Plan plan;
+    private User user;
 
     @Column(nullable = false)
     private String name;
@@ -39,11 +38,6 @@ public class PlanTravel {
     @Column(nullable = false)
     private String latitude;
 
-    @Enumerated(EnumType.STRING)
-    private TourType tourType;
-
     private String image;
 
-    @Column(nullable = false)
-    private int day;
 }

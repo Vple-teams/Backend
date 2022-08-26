@@ -1,10 +1,13 @@
 package com.app.vple.domain.dto;
 
-import com.app.vple.domain.PlanTravel;
+import com.app.vple.domain.Cart;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
-public class PlanTravelDto {
+public class MyCartDto {
 
     private Long id;
 
@@ -12,12 +15,12 @@ public class PlanTravelDto {
 
     private String address;
 
-    private int day;
+    private String image;
 
-    public PlanTravelDto(PlanTravel entity) {
+    public MyCartDto(Cart entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.address = entity.getAddress();
-        this.day = entity.getDay();
+        this.image = entity.getImage();
     }
 }

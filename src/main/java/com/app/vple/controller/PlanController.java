@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/plan")
+@RequestMapping("/auth/plan")
 public class PlanController {
 
     private final HttpSession httpSession;
@@ -75,6 +75,17 @@ public class PlanController {
         try {
             String title = planService.modifyPlan(id, planUpdateDto);
             return new ResponseEntity<>(title + "을 수정했습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/like/{id}")
+    public ResponseEntity<?> planLikeAdd(@PathVariable Long id) {
+        try {
+            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
+            String result = planService.changePlanLike(id, loginUser.getEmail());
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

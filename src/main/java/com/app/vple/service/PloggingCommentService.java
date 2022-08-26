@@ -22,7 +22,7 @@ public class PloggingCommentService {
 
     private final PloggingRepository ploggingRepository;
 
-    public List<PloggingMyCommentDto> findPloggingComment(String email) {
+    public List<MyPloggingCommentDto> findPloggingComment(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new NoSuchElementException("해당 유저가 없습니다.")
         );
@@ -32,7 +32,7 @@ public class PloggingCommentService {
             throw new ArrayIndexOutOfBoundsException("작성한 댓글이 없습니다.");
 
         return ploggingCommentByPloggingCommentWriter.stream().map(
-                PloggingMyCommentDto::new
+                MyPloggingCommentDto::new
         ).collect(Collectors.toList());
     }
 

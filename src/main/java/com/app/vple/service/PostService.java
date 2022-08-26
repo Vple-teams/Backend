@@ -51,16 +51,13 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new NoSuchElementException("해당 게시글이 존재하지 않습니다.")
         );
-
         post.addViews();
         postRepository.save(post);
-
         return new PostDetailDto(post);
-
     }
 
     @Transactional
-    public String addPost(PostUploadDto uploadPost, String email) {
+    public String addPost(PostUploadDto uploadPost, String email, String nickname) {
         try {
             User user = userRepository.findByEmail(email).orElseThrow(
                     () -> new NoSuchElementException("해당 사용자가 존재하지 않습니다."));
@@ -70,6 +67,11 @@ public class PostService {
                 place = placeRepository.getById(uploadPost.getPlaceId());
             }
             postRepository.save(uploadPost.toEntity(user, place));
+            Post recentPost = postRepository.findFirstByNicknameOrderByCreatedDateDesc(nickname).get(0);
+
+            for (String name : uploadPost.getHashtag()) {
+                hashTagRepository.save(new HashTag(recentPost, name));
+            }
             return uploadPost.getTitle();
         } catch (Exception e) {
             throw new IllegalStateException("형식이 잘못되었습니다.");
@@ -140,5 +142,12 @@ public class PostService {
         }
 
         return posts.map(PostListDto::new);
+    }
+
+    public Page<PostListDto> findHashtagPost(String hashtag, Pageable pageable) {
+        // hashtag: 여행, 식당, 관광지, 플로깅, 펀딩
+        Page<Post> hashtagPost = postRepository.findAllByHashTag(hashtag, pageable);
+
+        return hashtagPost.map(PostListDto::new);
     }
 }

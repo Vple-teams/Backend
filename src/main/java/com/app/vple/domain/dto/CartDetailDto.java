@@ -1,10 +1,10 @@
 package com.app.vple.domain.dto;
 
-import com.app.vple.domain.PlanTravel;
+import com.app.vple.domain.Cart;
 import lombok.Data;
 
 @Data
-public class PlanTravelDetailDto {
+public class CartDetailDto {
 
     private String name;
 
@@ -16,14 +16,11 @@ public class PlanTravelDetailDto {
 
     private String image;
 
-    private int day;
-
-    public PlanTravelDetailDto(PlanTravel entity) {
+    public CartDetailDto(Cart entity) {
         this.name = entity.getName();
         this.address = entity.getAddress();
         this.longitude = entity.getLongitude();
         this.latitude = entity.getLatitude();
         this.image = entity.getImage();
-        this.day = entity.getDay();
     }
 }

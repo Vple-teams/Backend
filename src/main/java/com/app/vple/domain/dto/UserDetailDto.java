@@ -3,6 +3,7 @@ package com.app.vple.domain.dto;
 import com.app.vple.domain.User;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
+import com.app.vple.domain.enums.VeganType;
 import lombok.Data;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class UserDetailDto {
 
     private String image;
 
+    private VeganType vegetarian;
+
     private List<MyPostsDto> posts;
 
     private List<MyCommentsDto> comments;
@@ -37,5 +40,6 @@ public class UserDetailDto {
         this.comments = user.getComments().stream().map(
                 MyCommentsDto::new
         ).collect(Collectors.toList());
+        this.vegetarian = user.getVegetarian();
     }
 }

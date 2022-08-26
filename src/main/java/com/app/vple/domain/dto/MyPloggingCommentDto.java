@@ -5,12 +5,12 @@ import com.app.vple.domain.PloggingComment;
 import lombok.Data;
 
 @Data
-public class  PloggingMyCommentDto {
+public class MyPloggingCommentDto {
     private Long id;
 
     private String content;
 
-    public PloggingMyCommentDto(PloggingComment entity) {
+    public MyPloggingCommentDto(PloggingComment entity) {
         this.id = entity.getId();
         this.content = entity.getContent();
     }

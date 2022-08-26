@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 public class PostUploadDto {
@@ -24,6 +25,8 @@ public class PostUploadDto {
     private boolean isReviewPost;
 
     private Long placeId;
+
+    private List<String> hashtag;
 
     public Post toEntity(User user, Place place) {
         return Post.builder()

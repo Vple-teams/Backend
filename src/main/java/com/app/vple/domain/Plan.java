@@ -4,6 +4,7 @@ import com.app.vple.domain.dto.PlanUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -47,13 +48,20 @@ public class Plan {
 
     private boolean isOpened;
 
-    private int likes;
+    @Column(name = "likes_count")
+    @Formula(value = "(select count(*) from check_duplicated_plan_likes where check_duplicated_plan_likes.plan_id = plan_id)")
+    private Integer likesCount;
 
     @Column(nullable = false)
     private int peopleNum;
 
     @OneToMany(mappedBy = "plan")
     private List<PlanTravel> planTravels;
+
+    @PrePersist
+    public void prePersist() {
+        this.likesCount = this.likesCount == null ? 0 : this.likesCount;
+    }
 
     public void updatePlan(PlanUpdateDto planUpdateDto) {
         this.title = planUpdateDto.getTitle();

@@ -13,66 +13,66 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity     // 테이블과 매핑할 클래스이므로 해당 어노테이션 명시
-@Getter     // Getter 메소드를 생성해 준다. (롬복을 사용해서 이용 가능)
+@Entity
+@Getter
 @Builder
-@Table(name = "ploggings")  // 엔티티와 매핑할 테이블을 "ploggings"로 지정
+@Table(name = "ploggings")
 @AllArgsConstructor
 public class Plogging extends BaseTime {
 
     public Plogging() {}
 
-    @Id     // id 변수에 기본키 할당
-    @GeneratedValue(strategy = GenerationType.IDENTITY)     // 데이터베이스에 기본키 생성 위임, sql사용하므로 IDENTITY속성 이용
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plogging_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)      // N:1관계,
-    @JoinColumn(name = "user_id")       // user 변수를 "user_id"로 외래키 매핑 (생략 가능)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User ploggingWriter;      // 글쓴이
+    private User ploggingWriter;
 
     @Column(nullable = false)
-    private String nickname;       // 아이디
+    private String nickname;
 
     @Column(nullable = false)
-    private String title;       //제목
+    private String title;
 
     @Column(nullable = false)
-    private String html;     // 내용
+    private String html;
 
     @Column(nullable = false)
-    private Integer views = 0;      // 조회수
+    private Integer views = 0;
 
     @Column(nullable = false)
     @Formula(value = "(select count(*) from plogging_comments where plogging_comments.plogging_comment_id = plogging_id)")
-    private Integer ploggingCommentCount;       //댓글 수
+    private Integer ploggingCommentCount;
 
     @Column(nullable = false)
-    private Integer nowPeople; // 현재 참여 인원
+    private Integer nowPeople;
 
     @Column(nullable = false)
-    private Integer totalPeople;    // 목표 참여 인원
+    private Integer totalPeople;
 
     @Column(nullable = false)
-    private LocalDate startDate;        // 모집 시작 날짜
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;      // 모집 마감 날짜
+    private LocalDate endDate;
 
     @Column(nullable = false)
-    private LocalDate executionDate;    // 실행 날짜
+    private LocalDate executionDate;
 
     @Column(nullable = false)
-    private String district; // 서울시, 경기도 등 대분류
+    private String district;
 
     @Column(nullable = false)
-    private String city; // 구, city
+    private String city;
 
-    @OneToOne(fetch = FetchType.LAZY)       // 필요로 할 때 데이터를 가져온다.
-    @JoinColumn(name = "plogging_team_id")      //외래키
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plogging_team_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private PloggingTeam team;      // 랭킹 시스템을 도입하면 사용하려했던 팀제도
+    private PloggingTeam team;
 
     @OneToMany(mappedBy = "plogging")
     private List<PloggingComment> ploggingComments;
