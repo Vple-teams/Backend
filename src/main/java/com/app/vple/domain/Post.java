@@ -35,7 +35,7 @@ public class Post extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User postWriter;
+    private User postWriter;    // 글쓴이
 
     @Column(nullable = false)
     private String nickname;

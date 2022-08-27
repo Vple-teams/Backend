@@ -1,17 +1,26 @@
 package com.app.vple.domain;
 
+import com.app.vple.domain.dto.PloggingUpdateDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "ploggings")
+@AllArgsConstructor
 public class Plogging extends BaseTime {
+
+    public Plogging() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +30,7 @@ public class Plogging extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private User ploggingWriter;
 
     @Column(nullable = false)
     private String nickname;
@@ -30,25 +39,35 @@ public class Plogging extends BaseTime {
     private String title;
 
     @Column(nullable = false)
-    private String content;
+    private String html;
 
     @Column(nullable = false)
-    private int views = 0;
+    private Integer views = 0;
 
     @Column(nullable = false)
-    private int nowPeople = 1; // 현재 인원 기본적으로 글쓴이 1명
+    @Formula(value = "(select count(*) from plogging_comments where plogging_comments.plogging_comment_id = plogging_id)")
+    private Integer ploggingCommentCount;
 
     @Column(nullable = false)
-    private int totalPeople;
+    private Integer nowPeople;
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private Integer totalPeople;
 
     @Column(nullable = false)
-    private String district; // 서울시, 경기도 등 대분류
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private String city; // 구, city
+    private LocalDate endDate;
+
+    @Column(nullable = false)
+    private LocalDate executionDate;
+
+    @Column(nullable = false)
+    private String district;
+
+    @Column(nullable = false)
+    private String city;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plogging_team_id")
@@ -56,6 +75,26 @@ public class Plogging extends BaseTime {
     private PloggingTeam team;
 
     @OneToMany(mappedBy = "plogging")
-    private List<PloggingComment> comments;
+    private List<PloggingComment> ploggingComments;
+
+    public void updatePlogging(PloggingUpdateDto updateDto){
+
+        this.title = updateDto.getTitle();
+        this.html = updateDto.getHtml();
+        this.startDate = updateDto.getStartDate();
+        this.endDate = updateDto.getEndDate();
+        this.executionDate = updateDto.getExecutionDate();
+        this.district = updateDto.getDistrict();
+        this.city = updateDto.getCity();
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.views = this.views == null ? 0 : this.views;
+        this.nowPeople = this.nowPeople == null ? 0 : this.nowPeople;
+        this.totalPeople = this.totalPeople == null ? 0 : this.totalPeople;
+    }
+
+    public void addViews() { this.views += 1; }
 }
 

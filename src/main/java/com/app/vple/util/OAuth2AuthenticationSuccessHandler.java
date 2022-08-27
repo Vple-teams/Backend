@@ -11,13 +11,13 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class  OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        String url = "https://localhost:3000/logout";
+        String url = "http://localhost:3000/logout";
 
         if (response.isCommitted())
             return;
