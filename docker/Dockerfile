@@ -6,7 +6,7 @@ RUN mkdir -p /opt/apps
 WORKDIR /opt/apps
 
 COPY ${JAR_FILE} /opt/apps/app.jar
-COPY --chmod=0777 entrypoint.sh /opt/apps/entrypoint.sh
+COPY --chmod=0777 docker/entrypoint.sh /opt/apps/entrypoint.sh
 
 ENTRYPOINT ["/opt/apps/entrypoint.sh"]
 
