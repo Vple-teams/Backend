@@ -64,7 +64,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: install up wg
-        run: sudo apt-get install wireguard
+        run: sudo apt-get install -y wireguard
       - name: Set up wg
         run: |
           echo "$WG_CONF" > /tmp/tunnel.conf
