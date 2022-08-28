@@ -65,7 +65,8 @@ jobs:
         run: sudo apt-get install wireguard
       - name: Set up wg
         run: |
-          sudo echo "$WG_CONF" > /etc/wireguard/tunnel.conf
+          echo "$WG_CONF" > /tmp/tunnel.conf
+          sudo cp /tmp/tunnel.conf /etc/wireguard/
           wg-quick up tunnel
         env:
           WG_CONF: ${{ secrets.WG_CONF }}
