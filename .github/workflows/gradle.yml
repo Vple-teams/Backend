@@ -21,60 +21,48 @@ jobs:
   build:
     runs-on: self-hosted
 
-#    services:
-#      mysql:
-#        image: mysql:8.0
-#        env:
-#          MYSQL_DATABASE: VPLE
-#          MYSQL_USER: test
-#          MYSQL_PASSWORD: 1234
-#          MYSQL_ROOT_PASSWORD: 1234
-#        ports:
-#          - 3306:3306
-#        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: VPLE
+          MYSQL_USER: test
+          MYSQL_PASSWORD: 1234
+          MYSQL_ROOT_PASSWORD: 1234
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v3
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'temurin'
-#      - name: Add Oauth Secret
-#        run: |
-#          echo "$OAUTH_CONFIG" >> src/main/resources/application-oauth2.properties
-#        env:
-#          OAUTH_CONFIG: ${{ secrets.OAUTH_CONFIG }}
-#      - name: Add GeoCoding Secret
-#        run: |
-#          echo "$GEO_CONFIG" >> src/main/resources/application-geocoding.properties
-#        env:
-#          GEO_CONFIG: ${{ secrets.GEO_CONFIG }}
-#
-#      - name: Build with Gradle
-#        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-#        with:
-#          arguments: build
-#      - name: Upload Files
-#        if: always()
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: test-reports
-#          path: build/reports/tests/test
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Add Oauth Secret
+        run: |
+          echo "$OAUTH_CONFIG" >> src/main/resources/application-oauth2.properties
+        env:
+          OAUTH_CONFIG: ${{ secrets.OAUTH_CONFIG }}
+      - name: Add GeoCoding Secret
+        run: |
+          echo "$GEO_CONFIG" >> src/main/resources/application-geocoding.properties
+        env:
+          GEO_CONFIG: ${{ secrets.GEO_CONFIG }}
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+      - name: Upload Files
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-reports
+          path: build/reports/tests/test
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: install up wg
-        run: sudo apt-get install -y wireguard
-      - name: Set up wg
-        run: |
-          echo "$WG_CONF" > /tmp/tunnel.conf
-          sudo cp /tmp/tunnel.conf /etc/wireguard/
-          wg-quick up tunnel
-        env:
-          WG_CONF: ${{ secrets.WG_CONF }}
-      - name: ip route result
-        run: |
-          ip route
       - name: Login to docker registry
         uses: docker/login-action@v2
         with:
