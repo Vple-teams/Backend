@@ -2,5 +2,12 @@ FROM openjdk:11-jdk-slim
 
 ARG JAR_FILE=build/libs/vple-0.0.1-SNAPSHOT.jar
 
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+RUN mkdir -p /opt/apps
+WORKDIR /opt/apps
+
+COPY ${JAR_FILE} /opt/apps/app.jar
+COPY --chmod=0777 entrypoint.sh /opt/apps/entrypoint.sh
+
+ENTRYPOINT ["/opt/apps/entrypoint.sh"]
+
+
