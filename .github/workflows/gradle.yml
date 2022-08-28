@@ -61,15 +61,14 @@ jobs:
         with:
           name: test-reports
           path: build/reports/tests/test
+      - name: install up wg
+        run: sudo apt-get install wireguard
       - name: Set up wg
-        uses: egor-tensin/setup-wireguard@v1
-        with:
-          endpoint: '${{ secrets.WG_ENDPOINT }}'
-          endpoint_public_key: '${{ secrets.WG_ENDPOINT_PUBLIC }}'
-          ips: '${{ secrets.WG_IPS }}'
-          allowed_ips: '${{ secrets.WG_ALLOWED_IPS }}'
-          private_key: '${{ secrets.WG_PRIVATE }}'
-          preshared_key: '${{ secrets.WG_PRESHARED }}'
+        run: |
+          sudo echo "$WG_CONF" > /etc/wireguard/tunnel.conf
+          wg-quick up tunnel
+        env:
+          WG_CONF: ${{ secrets.WG_CONF }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to docker registry
