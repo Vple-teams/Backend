@@ -88,14 +88,14 @@ jobs:
           file: ./docker/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_HOST }}/vple-backend:dev
-#      - name: Set up deploy
-#        run: |
-#          echo "$VPLE_BACKEND_DEPLOY" > /tmp/vple-backend.yaml
-#        env:
-#          VPLE_BACKEND_DEPLOY: ${{ secrets.VPLE_BACKEND_DEPLOY }}
-#      - name: Trigger deploy
-#        uses: Consensys/kubernetes-action@master
-#        env:
-#          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-#        with:
-#          args: apply /tmp/vple-backend.yaml
+      - name: Set up deploy
+        run: |
+          echo "$VPLE_BACKEND_DEPLOY" > /tmp/vple-backend.yaml
+        env:
+          VPLE_BACKEND_DEPLOY: ${{ secrets.VPLE_BACKEND_DEPLOY }}
+      - name: Trigger deploy
+        uses: Consensys/kubernetes-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: apply /tmp/vple-backend.yaml
