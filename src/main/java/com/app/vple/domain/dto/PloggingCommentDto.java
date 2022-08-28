@@ -1,12 +1,13 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.Comment;
+import com.app.vple.domain.PloggingComment;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class CommentDto {
+public class PloggingCommentDto {
 
     private Long id;
 
@@ -16,7 +17,7 @@ public class CommentDto {
 
     private LocalDateTime createdDate;
 
-    public CommentDto(Comment entity) {
+    public PloggingCommentDto(PloggingComment entity) {
         this.id = entity.getId();
         this.content = entity.getContent();
         this.nickname = entity.getNickname();
