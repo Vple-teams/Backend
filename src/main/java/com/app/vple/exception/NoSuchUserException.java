@@ -7,7 +7,7 @@ public class NoSuchUserException extends Exception {
     @Getter
     private final int ERR_CODE;
 
-    NoSuchUserException (String message) {
+    public NoSuchUserException(String message) {
         this(message, 100);
     }
 
