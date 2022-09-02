@@ -87,4 +87,12 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
         user.update(url);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void modifyAndSaveUserIntroduction(String email, String introduction) {
+        User me = userRepository.getByEmail(email);
+        me.setIntroduction(introduction);
+
+        userRepository.save(me);
+    }
 }
