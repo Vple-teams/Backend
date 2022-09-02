@@ -18,6 +18,8 @@ import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
 import java.util.List;
 
+import static com.app.vple.domain.enums.VeganType.ADJUST;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -110,6 +112,13 @@ public class User extends BaseTime {
 
     public String getRoleValue() {
         return this.myRole.getValue();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.introduction = this.introduction == null ? "" : this.introduction;
+        this.vegetarian = this.vegetarian == null ? ADJUST : this.vegetarian;
+
     }
 
 }
