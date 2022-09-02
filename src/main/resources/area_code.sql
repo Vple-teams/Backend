@@ -1,4 +1,5 @@
 USE VPLE;
+DROP TABLE  IF EXISTS area_code;
 
 CREATE TABLE IF NOT EXISTS area_code(
     id            INTEGER  NOT NULL PRIMARY KEY,

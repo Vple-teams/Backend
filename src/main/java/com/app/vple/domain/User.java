@@ -8,6 +8,7 @@ import com.app.vple.domain.enums.VeganType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
@@ -81,6 +82,7 @@ public class User extends BaseTime {
     @Column(nullable = false)
     private VeganType vegetarian;
 
+    @Setter
     private String introduction;
 
     public User update(String name, String image, String age) {
