@@ -37,3 +37,4 @@ out/
 .vscode/
 application-oauth2.properties
 application-geocoding.properties
+application-openapi.properties
