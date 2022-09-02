@@ -79,7 +79,6 @@ public class User extends BaseTime {
     private Integer followings;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private VeganType vegetarian;
 
     @Setter
