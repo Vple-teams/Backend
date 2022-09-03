@@ -24,19 +24,6 @@ public class RecommandTourSpotController {
 
     private final RecommandTourSpotService recommandTourSpotService;
 
-    private final int PAGE_SIZE = 20;
-
-    @GetMapping()
-    public ResponseEntity<?> recommandTourSpotList(
-            @PageableDefault(size = PAGE_SIZE, sort = "rating", direction = Sort.Direction.DESC) Pageable pageable) {
-        try {
-            Page<RecommandTourSpotListDto> recommandTourSpots = recommandTourSpotService.findRecommandTourSpotList(pageable);
-            return new ResponseEntity<>(recommandTourSpots, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> recommandTourSpotDetails(@PathVariable Long id) {
         try {
@@ -46,5 +33,4 @@ public class RecommandTourSpotController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
 }
