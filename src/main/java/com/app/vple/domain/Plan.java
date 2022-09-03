@@ -1,4 +1,4 @@
-package com.app.vple.domain;
+ package com.app.vple.domain;
 
 import com.app.vple.domain.dto.PlanUpdateDto;
 import lombok.AllArgsConstructor;

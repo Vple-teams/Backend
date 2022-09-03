@@ -8,13 +8,17 @@ import com.app.vple.domain.enums.VeganType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import java.util.List;
+
+import static com.app.vple.domain.enums.VeganType.ADJUST;
 
 @Entity
 @Table(name = "users")
@@ -64,9 +68,23 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<Language> languages;
 
+    @OneToMany(mappedBy = "user")
+    private List<Plan> plans;
+
+    @Formula(value = "(select count(*) from plan where plan.user_id=user_id)")
+    private Integer planCount;
+
+    @Formula(value = "(select count(*) from user_follow where user_follow.from_user_id=user_id)")
+    private Integer followers;
+
+    @Formula(value = "(select count(*) from user_follow where user_follow.to_user_id=user_id)")
+    private Integer followings;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private VeganType vegetarian;
+
+    @Setter
+    private String introduction;
 
     public User update(String name, String image, String age) {
 
@@ -95,4 +113,12 @@ public class User extends BaseTime {
     public String getRoleValue() {
         return this.myRole.getValue();
     }
+
+    @PrePersist
+    public void prePersist() {
+        this.introduction = this.introduction == null ? "" : this.introduction;
+        this.vegetarian = this.vegetarian == null ? ADJUST : this.vegetarian;
+
+    }
+
 }
