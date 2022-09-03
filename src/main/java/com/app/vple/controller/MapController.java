@@ -33,16 +33,6 @@ public class MapController {
         }
     }
 
-    @GetMapping("/tour_spot")
-    public ResponseEntity<?> MapTourSpotList() {
-        try {
-            List<MapTourSpotListDto> tourSpots = tourSpotService.findMapTourSpot();
-            return new ResponseEntity<>(tourSpots, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/search")
     public ResponseEntity<?> MapSearch(@RequestParam(name = "keyword") String keyword) {
         try {
