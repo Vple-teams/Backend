@@ -1,16 +1,18 @@
 package com.app.vple.domain;
 
 import com.app.vple.domain.enums.VeganType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.util.List;
 
-
-/**
- * 사용자의 위치 기반으로 주변 음식점이 보여지는 기능
- * 따라서 사용자 위치(경도, 위도) 약 200미터 내에 있는 가게들을 보여질 수 있는 로직 필요
- */
 @Entity
+@Table(name="recommand_restaurant")
+@Getter
 public class RecommandRestaurant {
 
     @Id
@@ -21,21 +23,37 @@ public class RecommandRestaurant {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String latitude;
+    private String category;
+
+    private String introduction;
+
+    private String phoneNumber;
+
+    private String openTime;
+
+    private Float rating;
+
+    //@Column(nullable = false)
+    private Float latitude;
+
+    //@Column(nullable = false)
+    private Float longitude;
 
     @Column(nullable = false)
-    private String longitude;
+    private String address;
 
     @Column(nullable = false)
-    private String profile;
+    private String district;
 
     @Column(nullable = false)
-    @Formula(value = "(select sum(rating) from reviews where id=recommand_restaurant_id)")
-    private float rating;
+    private String city;
 
     private String image;
 
+    @OneToMany(mappedBy = "recommandRestaurant")
+    private List<Menu> menus;
+
     @Enumerated(EnumType.STRING)
     private VeganType veganType;
+
 }

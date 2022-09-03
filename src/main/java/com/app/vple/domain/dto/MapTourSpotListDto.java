@@ -1,6 +1,6 @@
 package com.app.vple.domain.dto;
 
-import com.app.vple.domain.TourSpot;
+import com.app.vple.domain.RecommandTourSpot;
 import lombok.Data;
 
 @Data
@@ -14,7 +14,7 @@ public class MapTourSpotListDto {
 
     private Float longitude;
 
-    public MapTourSpotListDto(TourSpot entity) {
+    public MapTourSpotListDto(RecommandTourSpot entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.latitude = entity.getLatitude();

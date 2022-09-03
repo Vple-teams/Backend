@@ -1,6 +1,5 @@
 package com.app.vple.domain.dto;
 
-
 import com.app.vple.domain.Comment;
 import lombok.Data;
 

@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "menu")
 @Getter
 public class Menu {
 
@@ -17,14 +18,15 @@ public class Menu {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "recommand_restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Restaurant restaurant;
+    private RecommandRestaurant recommandRestaurant;
 
     @Column(nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private VeganType veganType;
+    private String image;
+
+    private String veganType;
 
 }

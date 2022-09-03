@@ -1,6 +1,6 @@
 package com.app.vple.domain.dto;
 
-import com.app.vple.domain.Restaurant;
+import com.app.vple.domain.RecommandRestaurant;
 import lombok.Data;
 
 @Data
@@ -14,7 +14,7 @@ public class MapRestaurantListDto {
 
     private Float longitude;
 
-    public MapRestaurantListDto(Restaurant entity) {
+    public MapRestaurantListDto(RecommandRestaurant entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.latitude = entity.getLatitude();

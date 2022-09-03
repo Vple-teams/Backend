@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * travel reivew post
@@ -31,8 +32,13 @@ public class HashTag {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
     public HashTag(Post post, String hashTag) {
         this.post = post;
         this.hashTag = hashTag;
+        this.createdDate = post.getCreatedDate();
     }
+
 }

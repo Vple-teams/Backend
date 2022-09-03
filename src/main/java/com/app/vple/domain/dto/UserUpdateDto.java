@@ -1,6 +1,7 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.User;
+import com.app.vple.domain.enums.VeganType;
 import lombok.Data;
 import lombok.Getter;
 import org.hibernate.validator.constraints.URL;
@@ -19,5 +20,7 @@ public class UserUpdateDto {
     private String gender;
 
     private String age;
+
+    private String vegetarian;
 
 }
