@@ -29,9 +29,9 @@ public class RecommandRestaurantDetailDto {
 
     private String city;
 
-    private Float latitude;
+    private String latitude;
 
-    private Float longitude;
+    private String longitude;
 
     private List<MenuDto> menus;
 

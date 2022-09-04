@@ -10,9 +10,9 @@ public class MapRestaurantListDto {
 
     private String name;
 
-    private Float latitude;
+    private String latitude;
 
-    private Float longitude;
+    private String longitude;
 
     public MapRestaurantListDto(RecommandRestaurant entity) {
         this.id = entity.getId();

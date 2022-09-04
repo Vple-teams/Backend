@@ -10,9 +10,9 @@ public class MapTourSpotListDto {
 
     private String name;
 
-    private Float latitude;
+    private String latitude;
 
-    private Float longitude;
+    private String longitude;
 
     public MapTourSpotListDto(RecommandTourSpot entity) {
         this.id = entity.getId();

@@ -23,10 +23,10 @@ public class RecommandTourSpot {
     private String name;
 
     @Column(nullable = false)
-    private Float latitude;
+    private String latitude;
 
     @Column(nullable = false)
-    private Float longitude;
+    private String longitude;
 
     @Column(nullable = false)
     private String address;

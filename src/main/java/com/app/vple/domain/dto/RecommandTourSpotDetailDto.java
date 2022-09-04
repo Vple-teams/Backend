@@ -12,9 +12,9 @@ public class RecommandTourSpotDetailDto {
 
     private String name;
 
-    private Float latitude;
+    private String latitude;
 
-    private Float longitude;
+    private String longitude;
 
     private String profile;
 
