@@ -36,7 +36,17 @@ public class RecommandTourSpotController {
             List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCityAndDistrict(city, district);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("tour api 호출에 실패했습니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> findTourSpotList(@RequestParam String city) {
+        try {
+            List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCity(city);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("tour api 호출에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 }
