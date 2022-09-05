@@ -58,7 +58,20 @@ public class RecommandTourSpotService {
         Long sigunguCode = areaCodeInfo.getDistrictCode();
 
         String URL = PREFIX_URL + serviceKey + "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&contentTypeId=15&areaCode=" + areaCode + "&sigunguCode=" + sigunguCode;
-        URL url = new URL(URL);
+        return callTourApi(URL);
+    }
+
+    public List<RecommandTourSpotDto> findTourSpotListByCity(String city) throws IOException {
+        List<AreaCode> areaCodes = areaCodeRepository.findByCity(city);
+
+        Long areaCode = areaCodes.get(0).getCityCode();
+
+        String URL = PREFIX_URL + serviceKey + "&numOfRows=20&pageNo=1&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&contentTypeId=15&areaCode=" + areaCode;
+        return callTourApi(URL);
+    }
+
+    private List<RecommandTourSpotDto> callTourApi(String URL) throws IOException {
+        java.net.URL url = new URL(URL);
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
