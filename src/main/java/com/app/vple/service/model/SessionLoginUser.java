@@ -10,6 +10,8 @@ import lombok.Getter;
 @Getter
 public class SessionLoginUser {
 
+    private Long id;
+
     private String name;
 
     private String email;
@@ -21,6 +23,7 @@ public class SessionLoginUser {
     private Age age;
 
     public SessionLoginUser(User user) {
+        this.id = user.getId();
         this.name = user.getNickname();
         this.email = user.getEmail();
         this.photo = user.getImage();

@@ -28,7 +28,18 @@ public class UserController {
     public ResponseEntity<?> userDetails() {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            UserDetailDto user = userService.findUser(loginUser.getEmail());
+            UserDetailDto user = userService.findUser(loginUser.getId());
+
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> otherUserDetails(@PathVariable Long id) {
+        try {
+            UserDetailDto user = userService.findUser(id);
 
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
