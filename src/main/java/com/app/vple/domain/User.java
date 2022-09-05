@@ -74,10 +74,10 @@ public class User extends BaseTime {
     @Formula(value = "(select count(*) from plan where plan.user_id=user_id)")
     private Integer planCount;
 
-    @Formula(value = "(select count(*) from user_follow where user_follow.from_user_id=user_id)")
+    @Formula(value = "(select count(*) from user_follow where user_follow.to_user_id=user_id)")
     private Integer followers;
 
-    @Formula(value = "(select count(*) from user_follow where user_follow.to_user_id=user_id)")
+    @Formula(value = "(select count(*) from user_follow where user_follow.from_user_id=user_id)")
     private Integer followings;
 
     @Enumerated(EnumType.STRING)

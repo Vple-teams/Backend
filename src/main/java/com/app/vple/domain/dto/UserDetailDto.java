@@ -1,11 +1,13 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.User;
+import com.app.vple.domain.UserFollow;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
 import com.app.vple.domain.enums.VeganType;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +32,11 @@ public class UserDetailDto {
 
     private VeganType vegetarian;
 
-    private List<MyPostsDto> posts;
+    private List<UserWrittenPlanListDto> myPlans;
 
-    private List<MyCommentsDto> comments;
+    private List<Follower> followerList = new ArrayList<>();
+
+    private List<Following> followingList = new ArrayList<>();
 
     private String introduction;
 
@@ -42,16 +46,22 @@ public class UserDetailDto {
         this.gender = user.getGender();
         this.age = user.getAge();
         this.image = user.getImage();
-        this.posts = user.getPosts().stream().map(
-                MyPostsDto::new
-        ).collect(Collectors.toList());
-        this.comments = user.getComments().stream().map(
-                MyCommentsDto::new
-        ).collect(Collectors.toList());
         this.vegetarian = user.getVegetarian();
         this.followers = user.getFollowers();
         this.followings = user.getFollowings();
         this.introduction = user.getIntroduction();
         this.planCount = user.getPlanCount();
+        this.myPlans = user.getPlans().stream().map(
+                UserWrittenPlanListDto::new
+        ).collect(Collectors.toList());
+    }
+
+    public void setFollow(List<UserFollow> followers, List<UserFollow> followings) {
+        this.followerList = followers.stream().map(
+                Follower::new
+        ).collect(Collectors.toList());
+        this.followingList = followings.stream().map(
+                Following::new
+        ).collect(Collectors.toList());
     }
 }

@@ -2,8 +2,10 @@ package com.app.vple.service;
 
 import com.app.vple.config.OAuthAttributes;
 import com.app.vple.domain.User;
+import com.app.vple.domain.UserFollow;
 import com.app.vple.domain.dto.UserDetailDto;
 import com.app.vple.domain.dto.UserUpdateDto;
+import com.app.vple.repository.UserFollowRepository;
 import com.app.vple.repository.UserRepository;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -26,6 +29,8 @@ import java.util.Optional;
 public class UserOAuth2Service extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+
+    private final UserFollowRepository userFollowRepository;
 
     private final HttpSession httpSession;
 
@@ -57,10 +62,15 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
         return userRepository.save(user);
     }
 
-    public UserDetailDto findUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NoSuchElementException("이메일이 존재하지 않습니다."));
-        return new UserDetailDto(user);
+    public UserDetailDto findUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("사용자가 존재하지 않습니다."));
+        List<UserFollow> followers = userFollowRepository.findByTo(user);
+        List<UserFollow> followings = userFollowRepository.findByFrom(user);
+        UserDetailDto userDto = new UserDetailDto(user);
+        userDto.setFollow(followers, followings);
+
+        return userDto;
     }
 
     @Transactional
