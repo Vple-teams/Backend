@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Data
 public class UserDetailDto {
 
+    private Long id;
+
     private String email;
 
     private String nickname;
@@ -41,6 +43,7 @@ public class UserDetailDto {
     private String introduction;
 
     public UserDetailDto(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.gender = user.getGender();
