@@ -9,12 +9,21 @@ import lombok.Data;
 public class RecommandTourSpotDetailDto {
 
     private Long id;
+
     private String name;
+
     private String latitude;
+
     private String longitude;
+
     private String profile;
+
+    private String address;
+
     private float rating;
+
     private String image;
+
     private TourType tourType;
 
     public RecommandTourSpotDetailDto(RecommandTourSpot entity) {
@@ -23,6 +32,7 @@ public class RecommandTourSpotDetailDto {
         this.latitude = entity.getLatitude();
         this.longitude = entity.getLongitude();
         this.profile = entity.getProfile();
+        this.address = entity.getAddress();
         this.rating = entity.getRating();
         this.image = entity.getImage();
         this.tourType = entity.getTourType();

@@ -1,14 +1,15 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.Plan;
-import com.app.vple.domain.dto.MyPlansDto;
-import com.app.vple.domain.dto.PlanCreateDto;
-import com.app.vple.domain.dto.PlanDetailDto;
-import com.app.vple.domain.dto.PlanUpdateDto;
+import com.app.vple.domain.dto.*;
 import com.app.vple.service.PlanService;
 import com.app.vple.service.PlanTravelService;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +36,18 @@ public class PlanController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/like")
+    public ResponseEntity<?> planLikeList(
+            @PageableDefault(size = 20, sort="likesCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        try {
+            Page<PlanListDto> plans = planService.findLikeList(pageable);
+            return new ResponseEntity<>(plans, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/{id}")

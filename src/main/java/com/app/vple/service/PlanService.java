@@ -3,14 +3,13 @@ package com.app.vple.service;
 import com.app.vple.domain.CheckDuplicatedPlanLike;
 import com.app.vple.domain.Plan;
 import com.app.vple.domain.User;
-import com.app.vple.domain.dto.MyPlansDto;
-import com.app.vple.domain.dto.PlanCreateDto;
-import com.app.vple.domain.dto.PlanDetailDto;
-import com.app.vple.domain.dto.PlanUpdateDto;
+import com.app.vple.domain.dto.*;
 import com.app.vple.repository.CheckDuplicatedPlanLikeRepository;
 import com.app.vple.repository.PlanRepository;
 import com.app.vple.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,6 +41,12 @@ public class PlanService {
         return planByUser.stream().map(
                 MyPlansDto::new
         ).collect(Collectors.toList());
+    }
+
+    public Page<PlanListDto> findLikeList(Pageable pageable) {
+        Page<Plan> plans = planRepository.findAll(pageable);
+
+        return plans.map(PlanListDto::new);
     }
 
     public PlanDetailDto findPlanDetails(Long planId) {
