@@ -13,11 +13,11 @@ public class ChattingRoomDto {
     public ChattingRoomDto(ChattingRoom entity, String myNickname) {
         this.id = entity.getId();
 
-        if (myNickname.equals(entity.getUserANickname())) {
-            this.anotherUser = entity.getUserBNickname();
+        if (myNickname.equals(entity.getUserA().getNickname())) {
+            this.anotherUser = entity.getUserB().getNickname();
         }
         else {
-            this.anotherUser = entity.getUserANickname();
+            this.anotherUser = entity.getUserA().getNickname();
         }
     }
 }

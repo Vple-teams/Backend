@@ -28,13 +28,14 @@ public class ChattingMessage extends BaseTime {
     @Column(nullable = false)
     private String message;
 
-    @Column(nullable = false, name = "sender_name")
-    private String senderName;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender")
     private User sender;
 
     @Enumerated
     private MessageType type;
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

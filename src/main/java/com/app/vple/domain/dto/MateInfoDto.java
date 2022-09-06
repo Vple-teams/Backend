@@ -8,7 +8,13 @@ public class MateInfoDto {
 
     private String nickname;
 
+    private Long id;
+
+    private String image;
+
     public MateInfoDto(Mate entity) {
-        this.nickname = entity.getNickname();
+        this.nickname = entity.getUser().getNickname();
+        this.id = entity.getUser().getId();
+        this.image = entity.getUser().getImage();
     }
 }

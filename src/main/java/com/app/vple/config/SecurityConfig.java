@@ -30,10 +30,10 @@ public class SecurityConfig {
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/auth/**").authenticated()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/ws/**").permitAll()
+                .antMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
                 .antMatchers("/api/v1/auth/**","/",
                         "/v2/api-docs", "/swagger-resources/**", "/swagger-ui/index.html", "/swagger-ui.html","/webjars/**", "/swagger/**",   // swagger
-                        "/h2-console/**",
+                        "/h2-console/**", "resources/**",
                         "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
