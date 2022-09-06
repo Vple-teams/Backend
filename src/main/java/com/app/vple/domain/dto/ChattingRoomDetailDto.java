@@ -19,8 +19,8 @@ public class ChattingRoomDetailDto {
 
     public ChattingRoomDetailDto(ChattingRoom entity) {
         this.id = entity.getId();
-        this.userANickname = entity.getUserANickname();
-        this.userBNickname = entity.getUserBNickname();
+        this.userANickname = entity.getUserA().getNickname();
+        this.userBNickname = entity.getUserB().getNickname();
         this.messages = entity.getMessages().stream().map(
                 ChattingMessageOnlyDto::new
         ).collect(Collectors.toList());

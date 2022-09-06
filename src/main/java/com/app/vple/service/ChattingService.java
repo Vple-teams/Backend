@@ -6,6 +6,7 @@ import com.app.vple.domain.User;
 import com.app.vple.domain.dto.ChattingMessageDto;
 import com.app.vple.domain.dto.ChattingRoomDetailDto;
 import com.app.vple.domain.dto.ChattingRoomDto;
+import com.app.vple.domain.dto.SendMessageDto;
 import com.app.vple.domain.enums.MessageType;
 import com.app.vple.repository.ChattingMessageRepository;
 import com.app.vple.repository.ChattingRoomRepository;
@@ -30,8 +31,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ChattingService {
 
-    private final ObjectMapper objectMapper;
-
     private final ChattingRoomRepository chattingRoomRepository;
 
     private final ChattingMessageRepository chattingMessageRepository;
@@ -39,107 +38,76 @@ public class ChattingService {
     private final UserRepository userRepository;
 
     @Transactional
-    public String createChattingRoom(String anotherNickname, String email) {
-        User another = userRepository.findByNickname(anotherNickname)
+    public void createChattingRoom(Long myUserId, Long anotherUserId) {
+        User me = userRepository.getById(myUserId);
+        User another = userRepository.findById(anotherUserId)
                 .orElseThrow(
-                        () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
+                        () -> new NoSuchElementException("유저가 존재하지 않습니다.")
                 );
 
-        User me = userRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
-                );
+        boolean chatRoom1 = chattingRoomRepository.existsByUserAOrUserB(me, another);
+        boolean chatRoom2 = chattingRoomRepository.existsByUserAOrUserB(another, me);
 
-        List<ChattingRoom> chattingRooms1 = chattingRoomRepository.findAllByUserANicknameOrUserBNickname(anotherNickname, me.getNickname());
-        List<ChattingRoom> chattingRooms2 = chattingRoomRepository.findAllByUserANicknameOrUserBNickname(me.getNickname(), anotherNickname);
-
-        if (!chattingRooms1.isEmpty() || !chattingRooms2.isEmpty()) {
+        if (chatRoom1 || chatRoom2) {
             throw new IllegalStateException("이미 채팅방이 생성되어 있습니다.");
         }
 
-        String sessionId = UUID.randomUUID().toString();
-        ChattingRoom chattingRoom = ChattingRoom.builder()
-                .sessionId(sessionId)
+        ChattingRoom newRoom = ChattingRoom.builder()
                 .userA(another)
-                .userANickname(anotherNickname)
                 .userB(me)
-                .userBNickname(me.getNickname())
                 .build();
-        chattingRoomRepository.save(chattingRoom);
-        return sessionId;
+
+        chattingRoomRepository.save(newRoom);
     }
 
     @Transactional
-    public  void handleMessage(WebSocketSession session, ChattingMessageDto chatMessage) throws IOException {
-        if (chatMessage.getType().equals(MessageType.JOIN)) {
-            User me = userRepository.findByNickname(chatMessage.getSender()).orElseThrow(
-                    () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
-            );
-            chatMessage.setMessage(me.getNickname() + "님이 입장했습니다.");
-        }
-        sendMessage(session, chatMessage);
-    }
+    public void saveMessage(SendMessageDto message) {
+        ChattingRoom chattingRoom = chattingRoomRepository.getById(message.getRoomId());
 
-    @Transactional
-    public void sendMessage(WebSocketSession session, ChattingMessageDto chattingMessageDto) throws IOException {
-        session.sendMessage(new TextMessage(
-                objectMapper.writeValueAsString(chattingMessageDto.getMessage())));
-
-        ChattingRoom chattingRoom = chattingRoomRepository.getChattingRoomBySessionId(chattingMessageDto.getSessionId());
-
-        User me = userRepository.findByNickname(chattingMessageDto.getSender()).orElseThrow(
-                () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
-        );
+        User me = userRepository.getById(message.getSenderId());
 
         ChattingMessage chattingMessage = ChattingMessage.builder()
-                .message(chattingMessageDto.getMessage())
                 .room(chattingRoom)
                 .sender(me)
-                .senderName(me.getNickname())
-                .type(chattingMessageDto.getType())
+                .message(message.getMessage())
+                .type(MessageType.valueOf(message.getMessageType()))
                 .build();
 
         chattingMessageRepository.save(chattingMessage);
     }
 
     @Transactional
-    public void deleteWebsocketSession(String nickname, Long id) {
+    public void deleteChattingRoom(Long id, Long userId) {
         ChattingRoom chattingRoom = chattingRoomRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("채팅방이 존재하지 않습니다.")
         );
+        User me = userRepository.getById(userId);
 
-        if (chattingRoom.getUserANickname().equals(nickname) || chattingRoom.getUserBNickname().equals(nickname)) {
-            chattingRoomRepository.delete(chattingRoom);
-        }
-        else {
-            throw new IllegalStateException("해당 채팅방의 참여자가 아닙니다.");
-        }
+        chattingRoom.setChattingRoomDelete(me);
+        chattingRoomRepository.save(chattingRoom);
     }
 
-    public List<ChattingRoomDto> findAllChattingRoom(String email) {
-        User me = userRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new NoSuchElementException("해당 유저가 존재하지 않습니다.")
-                );
-        String myNickname = me.getNickname();
+    public List<ChattingRoomDto> findAllChattingRoom(Long id) {
+        User me = userRepository.getById(id);
 
-        List<ChattingRoom> chattingRooms = chattingRoomRepository.findAllByUserANicknameOrUserBNickname(myNickname, myNickname);
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findAllByUserAOrUserB(me, me);
         return chattingRooms.stream().map(
-                (entity) -> new ChattingRoomDto(entity, myNickname)
+                (entity) -> new ChattingRoomDto(entity, me.getNickname())
         ).collect(Collectors.toList());
     }
 
-    public ChattingRoomDetailDto findChattingRoomDetail(Long id, String nickname) {
+    public ChattingRoomDetailDto findChattingRoomDetail(Long id, Long userId) {
         ChattingRoom chattingRoom = chattingRoomRepository.findById(id)
                 .orElseThrow(
                         () -> new NoSuchElementException("채팅방이 존재하지 않습니다.")
                 );
 
-        if (chattingRoom.getUserANickname().equals(nickname) || chattingRoom.getUserBNickname().equals(nickname)) {
+        User me = userRepository.getById(userId);
+        if (chattingRoom.getUserA() == me || chattingRoom.getUserB() == me) {
             return new ChattingRoomDetailDto(chattingRoom);
         }
         else {
-            throw new IllegalStateException("해당 채팅방에 접근할 수 없습니다. (채팅방에 속해있지 않습니다.)");
+            throw new IllegalStateException("해당 채팅방의 참여자가 아닙니다.");
         }
     }
 }

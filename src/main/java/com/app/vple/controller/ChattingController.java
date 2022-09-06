@@ -11,33 +11,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/chat")
+@RequestMapping("/auth/chat/room")
 public class ChattingController {
 
     private final ChattingService chattingService;
 
     private final HttpSession httpSession;
 
-    @PostMapping
-    public ResponseEntity<?> createChattingRoom(@RequestParam String another) {
-
-        try {
-            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            String sessionId = chattingService.createChattingRoom(another, loginUser.getEmail());
-            return new ResponseEntity<>("채팅방 생성 완료 [sessionId]: " + sessionId, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping
     public ResponseEntity<?> findAllChattingRoom() {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            List<ChattingRoomDto> chattingRooms = chattingService.findAllChattingRoom(loginUser.getEmail());
+            List<ChattingRoomDto> chattingRooms = chattingService.findAllChattingRoom(loginUser.getId());
             return new ResponseEntity<>(chattingRooms, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -48,19 +37,19 @@ public class ChattingController {
     public ResponseEntity<?> findChattingRoomDetail(@PathVariable Long id) {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            ChattingRoomDetailDto chattingRoomDetail = chattingService.findChattingRoomDetail(id, loginUser.getName());
+            ChattingRoomDetailDto chattingRoomDetail = chattingService.findChattingRoomDetail(id, loginUser.getId());
             return new ResponseEntity<>(chattingRoomDetail, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteChattingRoom(@PathVariable Long id) {
+    @PostMapping
+    public ResponseEntity<?> createChattingRoom(@RequestBody Map<String, Long> anotherId) {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            chattingService.deleteWebsocketSession(loginUser.getName(), id);
-            return new ResponseEntity<>("", HttpStatus.OK);
+            chattingService.createChattingRoom(loginUser.getId(), anotherId.get("anotherId"));
+            return new ResponseEntity<>("created chatting room", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
