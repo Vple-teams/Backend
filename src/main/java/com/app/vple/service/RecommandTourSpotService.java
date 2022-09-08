@@ -2,14 +2,10 @@ package com.app.vple.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -17,12 +13,8 @@ import javax.transaction.Transactional;
 import com.app.vple.domain.AreaCode;
 import com.app.vple.domain.dto.RecommandTourSpotDto;
 import com.app.vple.repository.AreaCodeRepository;
-import com.app.vple.service.model.Geocoding.Root;
 import com.app.vple.service.model.TourSpot.TourSpotResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.shaded.json.JSONArray;
-import com.nimbusds.jose.shaded.json.JSONObject;
-import com.nimbusds.jose.shaded.json.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -57,14 +49,27 @@ public class RecommandTourSpotService {
 
         if (!existTourSpot) {
             List<String> here = geoCodingService.findHere(Double.parseDouble(longitude), Double.parseDouble(latitude));
-            String city = here.get(0);
-            String[] splitData = city.split(" ");
+            String city = here.get(0); // 경기도, 서울특별시, 세종특별자치시
+            String district = here.get(1); // 성남시 분당구, 강남구, ""
+
+            String[] splitData = new String[0];
+            if (!district.equals(""))
+                splitData = district.split(" ");
             AreaCode result = null;
-            if (splitData.length == 1) {
-                result = areaCodeRepository.getByDistrictContaining(splitData[0]);
+            if (city.equals("서울특별시")) {
+                result = areaCodeRepository.getByCityAndDistrict("서울시", district);
+            }
+            else if (city.equals("제주특별자치도")) {
+                result = areaCodeRepository.getByCityAndDistrict("제주도", district);
             }
             else if (splitData.length > 1) {
-                result = areaCodeRepository.getByCityAndDistrict(splitData[0], splitData[1]);
+                result = areaCodeRepository.getByCityAndDistrict(city, splitData[0]);
+            }
+            else if (splitData.length == 1) {
+                result = areaCodeRepository.getByCityAndDistrict(city, district);
+            }
+            else if (district.equals("")) {
+                result = areaCodeRepository.getByCityContaining(city);
             }
 
             if (result == null) {
@@ -150,6 +155,11 @@ public class RecommandTourSpotService {
                 +"&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&areaCode="+ areaCode+"&sigunguCode="+ sigunguCode +"&keyword="
                 + URLEncoder.encode(keyword, StandardCharsets.UTF_8);
 
-        return callTourApi(URL).get(0);
+        List<RecommandTourSpotDto> results = callTourApi(URL);
+        if (results.isEmpty()) {
+            throw new NoSuchElementException("result X");
+        }
+
+        return results.get(0);
     }
 }
