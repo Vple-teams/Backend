@@ -5,6 +5,9 @@ import com.app.vple.domain.enums.TourType;
 
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class RecommandTourSpotDetailDto {
 
@@ -16,25 +19,31 @@ public class RecommandTourSpotDetailDto {
 
     private String longitude;
 
-    private String profile;
-
     private String address;
 
     private float rating;
 
     private String image;
 
-    private TourType tourType;
+    private List<ReviewDto> reviews;
+
+    private HashTagDto hashTags;
+
+    private Integer reivewCount;
 
     public RecommandTourSpotDetailDto(RecommandTourSpot entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.latitude = entity.getLatitude();
         this.longitude = entity.getLongitude();
-        this.profile = entity.getProfile();
         this.address = entity.getAddress();
         this.rating = entity.getRating();
         this.image = entity.getImage();
-        this.tourType = entity.getTourType();
+        this.reviews = entity.getReviews().stream().map(
+                ReviewDto::new
+        ).collect(Collectors.toList());
+        this.reivewCount = entity.getReviewCount();
+        this.hashTags = new HashTagDto(entity.getReviews());
     }
+
 }

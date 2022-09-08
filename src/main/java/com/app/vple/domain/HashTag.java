@@ -3,15 +3,14 @@ package com.app.vple.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * travel reivew post
- */
+
 @Entity
 @Getter
 @Table(name = "hashtags")
@@ -40,5 +39,4 @@ public class HashTag {
         this.hashTag = hashTag;
         this.createdDate = post.getCreatedDate();
     }
-
 }

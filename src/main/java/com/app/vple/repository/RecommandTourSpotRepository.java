@@ -15,7 +15,8 @@ public interface RecommandTourSpotRepository extends JpaRepository<RecommandTour
 
     Page<RecommandTourSpot> findAll(Pageable pageable);
 
-    List<RecommandTourSpot> findByNameContaining(String keyword);
+    boolean existsByNameAndLongitudeAndLatitude(String name, String longitude, String latitude);
 
-    List<RecommandTourSpot> findByAddressContaining(String keyword);
+    RecommandTourSpot getByNameAndLongitudeAndLatitude(String name, String lon, String lat);
+
 }

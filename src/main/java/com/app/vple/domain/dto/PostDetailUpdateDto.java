@@ -22,7 +22,6 @@ public class PostDetailUpdateDto {
 
     private List<String> hashTags;
 
-    private PlaceDto place;
 
     public PostDetailUpdateDto(Post entity) {
         this.title = entity.getTitle();
@@ -31,6 +30,5 @@ public class PostDetailUpdateDto {
         this.hashTags = entity.getHashTags().stream().map(
                 HashTag::getHashTag
         ).collect(Collectors.toList());
-        this.place = new PlaceDto(entity.getPlace());
     }
 }

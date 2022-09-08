@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +21,15 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final PlaceRepository placeRepository;
-
     private final UserRepository userRepository;
 
     private final HashTagRepository hashTagRepository;
 
     private final CheckDuplicatedPostLikeRepository checkDuplicatedPostLikeRepository;
+
+    private final RecommandTourSpotRepository recommandTourSpotRepository;
+
+    private final RecommandRestaurantRepository recommandRestaurantRepository;
 
     public Page<PostListDto> findPost(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
@@ -35,7 +38,6 @@ public class PostService {
     }
 
     public Page<PostListDto> findPostByCategory(boolean category, Pageable pageable) {
-        // 0: none, 1: review type
         Page<Post> postByCategory = postRepository.findAllByIsReviewPost(category, pageable);
 
         if(postByCategory.isEmpty()) {
@@ -58,24 +60,27 @@ public class PostService {
 
     @Transactional
     public String addPost(PostUploadDto uploadPost, String email, String nickname) {
-        try {
-            User user = userRepository.findByEmail(email).orElseThrow(
+
+        User user = userRepository.findByEmail(email).orElseThrow(
                     () -> new NoSuchElementException("해당 사용자가 존재하지 않습니다."));
 
-            Place place = null;
-            if (uploadPost.isReviewPost() && uploadPost.getPlaceId() != null) {
-                place = placeRepository.getById(uploadPost.getPlaceId());
-            }
-            postRepository.save(uploadPost.toEntity(user, place));
-            Post recentPost = postRepository.findFirstByNicknameOrderByCreatedDateDesc(nickname).get(0);
-
-            for (String name : uploadPost.getHashtag()) {
-                hashTagRepository.save(new HashTag(recentPost, name));
-            }
-            return uploadPost.getTitle();
-        } catch (Exception e) {
-            throw new IllegalStateException("형식이 잘못되었습니다.");
+        RecommandTourSpot tourSpot = null;
+        RecommandRestaurant restaurant = null;
+        if (uploadPost.getRestaurantId() != null) {
+            restaurant = recommandRestaurantRepository.findById(uploadPost.getRestaurantId()).orElse(null);
         }
+        else {
+            tourSpot = recommandTourSpotRepository.findById(uploadPost.getTourspotId()).orElse(null);
+        }
+
+        postRepository.save(uploadPost.toEntity(user, restaurant, tourSpot));
+        Post recentPost = postRepository.findFirstByNicknameOrderByCreatedDateDesc(nickname).get(0);
+
+        for (String name : uploadPost.getHashtag()) {
+                hashTagRepository.save(new HashTag(recentPost, name));
+        }
+
+        return uploadPost.getTitle();
     }
 
     @Transactional
@@ -145,7 +150,6 @@ public class PostService {
     }
 
     public Page<PostListDto> findHashtagPost(String hashtag, Pageable pageable) {
-        // hashtag: 여행, 식당, 관광지, 플로깅, 펀딩
         Page<Post> hashtagPost = postRepository.findAllByHashTag(hashtag, pageable);
 
         return hashtagPost.map(PostListDto::new);

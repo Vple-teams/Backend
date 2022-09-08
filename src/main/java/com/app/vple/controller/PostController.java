@@ -58,7 +58,6 @@ public class PostController {
             @PageableDefault(size = PAGE_SIZE) Pageable pageable,
             @RequestParam(name = "keyword") String hashtag) {
         try {
-            System.out.println("hashtag = " + hashtag);
             Page<PostListDto> hashtagPost = postService.findHashtagPost(hashtag, pageable);
             return new ResponseEntity<>(hashtagPost, HttpStatus.OK);
         } catch (Exception e) {
@@ -94,7 +93,7 @@ public class PostController {
             Page<PostListDto> posts = postService.searchPost(keyword, pageable);
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error post add", HttpStatus.BAD_REQUEST);
         }
     }
 

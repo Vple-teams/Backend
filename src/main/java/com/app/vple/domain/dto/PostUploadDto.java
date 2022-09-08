@@ -1,7 +1,8 @@
 package com.app.vple.domain.dto;
 
-import com.app.vple.domain.Place;
 import com.app.vple.domain.Post;
+import com.app.vple.domain.RecommandRestaurant;
+import com.app.vple.domain.RecommandTourSpot;
 import com.app.vple.domain.User;
 import lombok.Data;
 
@@ -24,20 +25,36 @@ public class PostUploadDto {
     @NotNull(message = "게시글의 카테고리가 필요합니다.")
     private boolean isReviewPost;
 
-    private Long placeId;
-
     private List<String> hashtag;
 
-    public Post toEntity(User user, Place place) {
-        return Post.builder()
-                .title(title)
-                .html(html)
-                .likesCount(0)
-                .views(0)
-                .place(place)
-                .isReviewPost(isReviewPost)
-                .nickname(user.getNickname())
-                .postWriter(user)
-                .build();
+    private Long restaurantId;
+
+    private Long tourspotId;
+
+    public Post toEntity(User user, RecommandRestaurant restaurant, RecommandTourSpot tourSpot) {
+
+        if (restaurant != null)
+            return Post.builder()
+                    .title(title)
+                    .html(html)
+                    .likesCount(0)
+                    .restaurant(restaurant)
+                    .views(0)
+                    .isReviewPost(isReviewPost)
+                    .nickname(user.getNickname())
+                    .postWriter(user)
+                    .build();
+
+        else
+            return Post.builder()
+                    .title(title)
+                    .html(html)
+                    .likesCount(0)
+                    .tourSpot(tourSpot)
+                    .views(0)
+                    .isReviewPost(isReviewPost)
+                    .nickname(user.getNickname())
+                    .postWriter(user)
+                    .build();
     }
 }
