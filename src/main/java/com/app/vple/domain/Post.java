@@ -49,7 +49,7 @@ public class Post extends BaseTime {
     private Integer commentCount;
 
     @Column(nullable = false, name = "is_review_post")
-    private boolean isReviewPost; // 0: none, 1: review post
+    private boolean isReviewPost;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
@@ -57,11 +57,15 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<HashTag> hashTags;
 
-    private Integer views;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tourspot_id")
+    private RecommandTourSpot tourSpot;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id")
-    private Place place;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private RecommandRestaurant restaurant;
+
+    private Integer views;
 
     public void updatePost(PostUpdateDto updateDto) {
         this.title = updateDto.getTitle();

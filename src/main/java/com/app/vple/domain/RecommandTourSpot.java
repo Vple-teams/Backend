@@ -1,6 +1,5 @@
 package com.app.vple.domain;
 
-import com.app.vple.domain.enums.TourType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +7,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="recommand_tour_spot")
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecommandTourSpot {
 
     @Id
@@ -32,6 +35,12 @@ public class RecommandTourSpot {
     private String address;
 
     @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String district;
+
+    @Column(nullable = false)
     private String profile;
 
     @Column(nullable = false)
@@ -40,6 +49,10 @@ public class RecommandTourSpot {
     @Column(nullable = false)
     private String image;
 
-    @Enumerated(EnumType.STRING)
-    private TourType tourType;
+    @OneToMany(mappedBy = "tourSpot")
+    private List<Post> reviews;
+
+    @Column(name = "review_count")
+    @Formula(value = "(select count(*) from posts where posts.tourspot_id = recommand_tour_spot_id)")
+    private Integer reviewCount;
 }

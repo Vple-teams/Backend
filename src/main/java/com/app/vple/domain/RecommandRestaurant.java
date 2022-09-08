@@ -56,4 +56,10 @@ public class RecommandRestaurant {
     @Enumerated(EnumType.STRING)
     private VeganType veganType;
 
+    @OneToMany(mappedBy = "restaurant")
+    private List<Post> reviews;
+
+    @Column(name = "review_count")
+    @Formula(value = "(select count(*) from posts where posts.restaurant_id = recommand_restaurant_id)")
+    private Integer reviewCount;
 }

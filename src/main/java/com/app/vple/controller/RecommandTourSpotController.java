@@ -20,10 +20,12 @@ public class RecommandTourSpotController {
 
     private final RecommandTourSpotService recommandTourSpotService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> recommandTourSpotDetails(@PathVariable Long id) {
+    @GetMapping("/details")
+    public ResponseEntity<?> recommandTourSpotDetails(@RequestParam("keyword") String keyword,
+                                                      @RequestParam("latitude") String latitude,
+                                                      @RequestParam("longitude") String longitude) {
         try {
-            RecommandTourSpotDetailDto recommandTourSpot = recommandTourSpotService.findRecommandTourSpotDetails(id);
+            RecommandTourSpotDetailDto recommandTourSpot = recommandTourSpotService.findRecommandTourSpotDetails(keyword, latitude, longitude);
             return new ResponseEntity<>(recommandTourSpot, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

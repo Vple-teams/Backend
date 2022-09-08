@@ -31,8 +31,6 @@ public class PostDetailDto {
 
     private Integer views;
 
-    private PlaceDto place;
-
     private List<String> hashTag;
 
     public PostDetailDto(Post entity) {
@@ -47,7 +45,6 @@ public class PostDetailDto {
         ).collect(Collectors.toList());
         this.createdDate = entity.getCreatedDate();
         this.views = entity.getViews();
-        this.place = new PlaceDto(entity.getPlace());
         this.hashTag = entity.getHashTags().stream().map(
                 HashTag::getHashTag
         ).collect(Collectors.toList());

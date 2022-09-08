@@ -41,6 +41,10 @@ public class RecommandRestaurantDetailDto {
 
     private VeganType veganType;
 
+    private List<ReviewDto> reviews;
+
+    private HashTagDto hashTags;
+
     public RecommandRestaurantDetailDto(RecommandRestaurant entity) {
         this.id = entity.getId();
         this.name = entity.getName();
@@ -59,5 +63,7 @@ public class RecommandRestaurantDetailDto {
         this.rating = entity.getRating();
         this.image = entity.getImage();
         this.veganType = entity.getVeganType();
+        this.reviews = entity.getReviews().stream().map(ReviewDto::new).collect(Collectors.toList());
+        this.hashTags = new HashTagDto(entity.getReviews());
     }
 }
