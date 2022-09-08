@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AddMateDto {
 
-    private String longitude;
+    private Double longitude;
 
-    private String latitude;
+    private Double latitude;
 }
