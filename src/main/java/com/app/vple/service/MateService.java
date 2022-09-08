@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -23,26 +23,20 @@ public class MateService {
 
     private final UserRepository userRepository;
 
-    private final GeoCodingService geoCodingService;
 
     @Transactional
-    public void addMate(String email, String latitude, String longitude) throws IOException {
+    public void addMate(String email, Double latitude, Double longitude) throws Exception {
         User me = userRepository.findByEmail(email)
                 .orElseThrow( () -> new NoSuchElementException("유저가 존재하지 않습니다."));
 
-        List<String> address = geoCodingService.findHere(longitude, latitude);
-
-        if (address.size() < 2) {
-            throw new NoSuchElementException("주소를 찾을 수 없습니다.");
+        if(mateRepository.existsByUser(me)) {
+            throw new Exception("이미 메이트기능을 사용중입니다.");
         }
 
         Mate mate = Mate.builder()
                 .user(me)
-                .longitude(longitude)
                 .latitude(latitude)
-                .nickname(me.getNickname())
-                .cityDistrict(address.get(0))
-                .dong(address.get(1))
+                .longitude(longitude)
                 .build();
 
         mateRepository.save(mate);
@@ -66,7 +60,10 @@ public class MateService {
         Mate myMate = mateRepository.findByUser(me)
                 .orElseThrow( () -> new NoSuchElementException("mate 기능이 활성화되어 있지 않습니다."));
 
-        return mateRepository.findAllByCityDistrictAndDongAndNicknameNot(myMate.getCityDistrict(), myMate.getDong(), me.getNickname()).stream()
-                .map(MateInfoDto::new).collect(Collectors.toList());
+        Double myLong = myMate.getLongitude();
+        Double myLat  = myMate.getLatitude();
+
+        List<Mate> mates = mateRepository.findAllNearByMe(myLong, myLat, me.getId());
+        return mates.stream().map(MateInfoDto::new).collect(Collectors.toList());
     }
 }

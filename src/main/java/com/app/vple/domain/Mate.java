@@ -3,6 +3,7 @@ package com.app.vple.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 
@@ -23,17 +24,8 @@ public class Mate {
     private User user;
 
     @Column(nullable = false)
-    private String nickname;
+    private Double longitude;
 
     @Column(nullable = false)
-    private String longitude;
-
-    @Column(nullable = false)
-    private String latitude;
-
-    @Column(nullable = false, name = "city_district")
-    private String cityDistrict;
-
-    @Column(nullable = false, name = "dong")
-    private String dong;
+    private Double latitude;
 }

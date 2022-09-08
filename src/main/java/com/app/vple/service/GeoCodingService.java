@@ -28,7 +28,7 @@ public class GeoCodingService {
 
     private final String URL_POSTFIX = "&orders=legalcode&output=json";
 
-    public List<String> findHere(String longitude, String latitude) throws IOException {
+    public List<String> findHere(Double longitude, Double latitude) throws IOException {
 
         String result = URL_PREFIX + "coords=" + longitude + "," + latitude + URL_POSTFIX;
         URL url = new URL(result);
