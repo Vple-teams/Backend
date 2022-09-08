@@ -50,8 +50,8 @@ public class GeoCodingService {
         Root response = objectMapper.readValue(responseString, Root.class);
 
         List<String> address = new ArrayList<>();
-        address.add(response.results.get(0).region.area2.name); // 성남시 분당구
-        address.add(response.results.get(0).region.area3.name); // 정자동
+        address.add(response.results.get(0).region.area1.name); // 경기도, 서울시, 세종특별시
+        address.add(response.results.get(0).region.area2.name); // 성남시 분당구, 강남구, ""
         return address;
     }
 }

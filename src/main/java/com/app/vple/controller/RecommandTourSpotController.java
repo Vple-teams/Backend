@@ -1,6 +1,8 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.dto.RecommandTourSpotDto;
+import com.app.vple.service.GeoCodingService;
+import com.app.vple.service.model.Geocoding.Results;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -19,6 +21,8 @@ import java.util.List;
 public class RecommandTourSpotController {
 
     private final RecommandTourSpotService recommandTourSpotService;
+
+    private final GeoCodingService geoCodingService;
 
     @GetMapping("/details")
     public ResponseEntity<?> recommandTourSpotDetails(@RequestParam("keyword") String keyword,
@@ -51,4 +55,5 @@ public class RecommandTourSpotController {
             return new ResponseEntity<>("tour api 호출에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
     }
+
 }
