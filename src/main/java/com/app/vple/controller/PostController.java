@@ -102,7 +102,7 @@ public class PostController {
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
             String email = loginUser.getEmail();
-            String title = postService.addPost(postUploadDto, email, loginUser.getName());
+            String title = postService.addPost(postUploadDto, email);
             return new ResponseEntity<>(title + " 게시글 등록이 완료되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

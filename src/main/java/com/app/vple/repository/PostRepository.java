@@ -1,6 +1,7 @@
 package com.app.vple.repository;
 
 import com.app.vple.domain.Post;
+import com.app.vple.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findFirstByNicknameOrderByCreatedDateDesc(String nickname);
+    Post findFirstByPostWriterOrderByCreatedDateDesc(User user);
 
     Page<Post> findAllByIsReviewPost(boolean isReviewPost, Pageable pageable);
 

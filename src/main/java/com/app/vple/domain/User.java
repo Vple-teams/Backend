@@ -1,5 +1,6 @@
 package com.app.vple.domain;
 
+import com.app.vple.domain.dto.NicknameUpdateDto;
 import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.domain.enums.Age;
 import com.app.vple.domain.enums.Gender;
@@ -13,7 +14,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import java.util.List;
@@ -53,7 +53,6 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role myRole;
 
-    @URL
     @Column(name = "image_url")
     private String image;
 
@@ -99,13 +98,14 @@ public class User extends BaseTime {
     }
 
     public void update(UserUpdateDto updateInfo) {
-        this.nickname = updateInfo.getNickname();
-        this.image = updateInfo.getImage() == null ? this.image : updateInfo.getImage();
         this.gender = updateInfo.getGender() == null ? this.gender : Gender.toGender(updateInfo.getGender());
         this.age = updateInfo.getAge() == null ? this.age : Age.toAge(updateInfo.getAge());
         this.vegetarian = updateInfo.getVegetarian() == null ? this.vegetarian : VeganType.valueOf(updateInfo.getVegetarian());
     }
 
+    public void updateNickname(NicknameUpdateDto nicknameUpdateDto) {
+        this.nickname = nicknameUpdateDto.getNickname();
+    }
     public void update(String url) {
         this.image = url;
     }

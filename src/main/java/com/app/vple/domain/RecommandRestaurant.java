@@ -57,9 +57,9 @@ public class RecommandRestaurant {
     private VeganType veganType;
 
     @OneToMany(mappedBy = "restaurant")
-    private List<Post> reviews;
+    private List<RestaurantReview> reviews;
 
     @Column(name = "review_count")
-    @Formula(value = "(select count(*) from posts where posts.restaurant_id = recommand_restaurant_id)")
+    @Formula(value = "(select count(*) from restaurant_reviews where restaurant_reviews.restaurant_id = recommand_restaurant_id)")
     private Integer reviewCount;
 }

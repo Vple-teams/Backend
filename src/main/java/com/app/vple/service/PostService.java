@@ -27,10 +27,6 @@ public class PostService {
 
     private final CheckDuplicatedPostLikeRepository checkDuplicatedPostLikeRepository;
 
-    private final RecommandTourSpotRepository recommandTourSpotRepository;
-
-    private final RecommandRestaurantRepository recommandRestaurantRepository;
-
     public Page<PostListDto> findPost(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
 
@@ -59,22 +55,13 @@ public class PostService {
     }
 
     @Transactional
-    public String addPost(PostUploadDto uploadPost, String email, String nickname) {
+    public String addPost(PostUploadDto uploadPost, String email) {
 
         User user = userRepository.findByEmail(email).orElseThrow(
                     () -> new NoSuchElementException("해당 사용자가 존재하지 않습니다."));
 
-        RecommandTourSpot tourSpot = null;
-        RecommandRestaurant restaurant = null;
-        if (uploadPost.getRestaurantId() != null) {
-            restaurant = recommandRestaurantRepository.findById(uploadPost.getRestaurantId()).orElse(null);
-        }
-        else {
-            tourSpot = recommandTourSpotRepository.findById(uploadPost.getTourspotId()).orElse(null);
-        }
-
-        postRepository.save(uploadPost.toEntity(user, restaurant, tourSpot));
-        Post recentPost = postRepository.findFirstByNicknameOrderByCreatedDateDesc(nickname).get(0);
+        postRepository.save(uploadPost.toEntity(user));
+        Post recentPost = postRepository.findFirstByPostWriterOrderByCreatedDateDesc(user);
 
         for (String name : uploadPost.getHashtag()) {
                 hashTagRepository.save(new HashTag(recentPost, name));

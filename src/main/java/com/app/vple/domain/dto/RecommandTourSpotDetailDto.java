@@ -39,11 +39,9 @@ public class RecommandTourSpotDetailDto {
         this.address = entity.getAddress();
         this.rating = entity.getRating();
         this.image = entity.getImage();
-        this.reviews = entity.getReviews().stream().map(
-                ReviewDto::new
-        ).collect(Collectors.toList());
+        this.reviews = entity.getReviews().stream().map(ReviewDto::new).collect(Collectors.toList());
         this.reivewCount = entity.getReviewCount();
-        this.hashTags = new HashTagDto(entity.getReviews());
+        this.hashTags = new HashTagDto(0, entity.getReviews());
     }
 
 }

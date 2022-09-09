@@ -57,14 +57,6 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<HashTag> hashTags;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tourspot_id")
-    private RecommandTourSpot tourSpot;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private RecommandRestaurant restaurant;
-
     private Integer views;
 
     public void updatePost(PostUpdateDto updateDto) {
