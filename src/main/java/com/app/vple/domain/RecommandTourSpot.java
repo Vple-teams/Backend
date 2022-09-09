@@ -50,9 +50,9 @@ public class RecommandTourSpot {
     private String image;
 
     @OneToMany(mappedBy = "tourSpot")
-    private List<Post> reviews;
+    private List<TourSpotReview> reviews;
 
     @Column(name = "review_count")
-    @Formula(value = "(select count(*) from posts where posts.tourspot_id = recommand_tour_spot_id)")
+    @Formula(value = "(select count(*) from tourspot_reviews where tourspot_reviews.tourspot_id = recommand_tour_spot_id)")
     private Integer reviewCount;
 }

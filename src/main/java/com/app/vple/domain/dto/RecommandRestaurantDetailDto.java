@@ -64,6 +64,6 @@ public class RecommandRestaurantDetailDto {
         this.image = entity.getImage();
         this.veganType = entity.getVeganType();
         this.reviews = entity.getReviews().stream().map(ReviewDto::new).collect(Collectors.toList());
-        this.hashTags = new HashTagDto(entity.getReviews());
+        this.hashTags = new HashTagDto(entity.getReviews(), false);
     }
 }

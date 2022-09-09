@@ -27,34 +27,17 @@ public class PostUploadDto {
 
     private List<String> hashtag;
 
-    private Long restaurantId;
+    public Post toEntity(User user) {
+        return Post.builder()
+                .title(title)
+                .html(html)
+                .likesCount(0)
+                .views(0)
+                .isReviewPost(isReviewPost)
+                .nickname(user.getNickname())
+                .postWriter(user)
+                .build();
 
-    private Long tourspotId;
 
-    public Post toEntity(User user, RecommandRestaurant restaurant, RecommandTourSpot tourSpot) {
-
-        if (restaurant != null)
-            return Post.builder()
-                    .title(title)
-                    .html(html)
-                    .likesCount(0)
-                    .restaurant(restaurant)
-                    .views(0)
-                    .isReviewPost(isReviewPost)
-                    .nickname(user.getNickname())
-                    .postWriter(user)
-                    .build();
-
-        else
-            return Post.builder()
-                    .title(title)
-                    .html(html)
-                    .likesCount(0)
-                    .tourSpot(tourSpot)
-                    .views(0)
-                    .isReviewPost(isReviewPost)
-                    .nickname(user.getNickname())
-                    .postWriter(user)
-                    .build();
     }
 }

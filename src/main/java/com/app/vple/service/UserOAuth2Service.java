@@ -1,11 +1,14 @@
 package com.app.vple.service;
 
 import com.app.vple.config.OAuthAttributes;
+import com.app.vple.domain.Language;
 import com.app.vple.domain.User;
 import com.app.vple.domain.UserFollow;
+import com.app.vple.domain.dto.NicknameUpdateDto;
 import com.app.vple.domain.dto.UserDetailDto;
 import com.app.vple.domain.dto.UserUpdateDto;
 import com.app.vple.repository.UserFollowRepository;
+import com.app.vple.repository.UserLanguageRepository;
 import com.app.vple.repository.UserRepository;
 import com.app.vple.service.model.SessionLoginUser;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,8 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
     private final UserFollowRepository userFollowRepository;
+
+    private final UserLanguageRepository userLanguageRepository;
 
     private final HttpSession httpSession;
 
@@ -74,19 +79,32 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
     }
 
     @Transactional
-    public void modifyUser(String email, UserUpdateDto updateInfo) throws Exception {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("해당 이메일이 없습니다."));
+    public void modifyUserNickname(Long id, NicknameUpdateDto updateDto) throws IllegalAccessException {
+        User user = userRepository.getById(id);
 
-        if (updateInfo.getNickname().length() > 0) {
-            Optional<User> checkDuplicatedNickname = userRepository.findByNickname(updateInfo.getNickname());
+        if (updateDto.getNickname().length() > 0) {
+            Optional<User> checkDuplicatedNickname = userRepository.findByNickname(updateDto.getNickname());
 
             if (checkDuplicatedNickname.isPresent()) {
                 throw new IllegalAccessException("중복된 닉네임입니다.");
             }
         }
+        user.updateNickname(updateDto);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void modifyUser(Long id, UserUpdateDto updateInfo) {
+        User user = userRepository.getById(id);
         user.update(updateInfo);
         userRepository.save(user);
+
+        userLanguageRepository.deleteByUser(user);
+
+        List<String> myLanguages = updateInfo.getLanguages();
+        for(int i = 0; i < myLanguages.size(); i++) {
+            userLanguageRepository.save(new Language(user, myLanguages.get(i), i));
+        }
     }
 
     @Transactional
@@ -104,5 +122,20 @@ public class UserOAuth2Service extends DefaultOAuth2UserService {
         me.setIntroduction(introduction);
 
         userRepository.save(me);
+    }
+
+    @Transactional
+    public void userLanguagePriority(Long id, String language) {
+        User me = userRepository.getById(id);
+        Language myLang = userLanguageRepository.findByNameAndUser(language, me)
+                .orElseThrow( () -> new NoSuchElementException("no language"));
+
+        Language firstLang = userLanguageRepository.findByPriorityAndUser(0, me)
+                .orElseThrow( () -> new NoSuchElementException("no such priority"));
+        firstLang.changePR(myLang.getPriority());
+        myLang.changePR(0);
+
+        userLanguageRepository.save(firstLang);
+        userLanguageRepository.save(myLang);
     }
 }

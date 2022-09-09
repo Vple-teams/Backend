@@ -1,5 +1,6 @@
 package com.app.vple.controller;
 
+import com.app.vple.domain.dto.NicknameUpdateDto;
 import com.app.vple.domain.dto.UserDetailDto;
 import com.app.vple.domain.dto.UserIntroductionDto;
 import com.app.vple.domain.dto.UserUpdateDto;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -48,7 +50,19 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> userModify(@Validated @RequestBody UserUpdateDto userUpdateDto, BindingResult bindingResult) {
+    public ResponseEntity<?> userModify(@RequestBody UserUpdateDto userUpdateDto) {
+
+        try {
+            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
+            userService.modifyUser(loginUser.getId(), userUpdateDto);
+            return new ResponseEntity<>(loginUser.getEmail() + "님의 정보가 수정되었습니다.", HttpStatus.OK);
+        } catch (Exception e) { // 400 error
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<?> userNicknameModify(@Validated @RequestBody NicknameUpdateDto nicknameUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             bindingResult.getAllErrors().forEach(objectError -> {
@@ -59,11 +73,12 @@ public class UserController {
 
             return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
         }
+
         try {
             SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
-            userService.modifyUser(loginUser.getEmail(), userUpdateDto);
-            return new ResponseEntity<>(loginUser.getEmail() + "님의 정보가 수정되었습니다.", HttpStatus.OK);
-        } catch (Exception e) { // 400 error
+            userService.modifyUserNickname(loginUser.getId(), nicknameUpdateDto);
+            return new ResponseEntity<>("Your nickname has been updated.", HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -77,6 +92,17 @@ public class UserController {
             return new ResponseEntity<>("자기소개 추가/수정 성공", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("자기소개 추가/수정 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/language")
+    public ResponseEntity<?> userLanguagePriorityModify(@RequestBody Map<String, String> language) {
+        try {
+            SessionLoginUser loginUser = (SessionLoginUser) httpSession.getAttribute("user");
+            userService.userLanguagePriority(loginUser.getId(), language.get("language"));
+            return new ResponseEntity<>("priority change success", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("priority change failed", HttpStatus.BAD_REQUEST);
         }
     }
 }
