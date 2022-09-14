@@ -4,6 +4,7 @@ package com.app.vple.controller;
 import com.app.vple.domain.dto.*;
 import com.app.vple.service.PostService;
 import com.app.vple.service.model.SessionLoginUser;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class PostController {
 
     private final int PAGE_SIZE = 20;
 
+    @ApiOperation(value = "게시글 전체 보기")
     @GetMapping("/api/post")
     public ResponseEntity<?> postList(
             @PageableDefault(size = PAGE_SIZE, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -39,6 +41,7 @@ public class PostController {
         }
     }
 
+    @ApiOperation(value = "keyword 별 게시글 보기")
     @GetMapping("/api/post/category")
     public ResponseEntity<?> postCategoryList(
             @PageableDefault(size = PAGE_SIZE, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
@@ -53,6 +56,7 @@ public class PostController {
         }
     }
 
+    @ApiOperation(value = "해시 태그로 게시글 보기")
     @GetMapping("/api/post/hashtag")
     public ResponseEntity<?> postHashtagList(
             @PageableDefault(size = PAGE_SIZE) Pageable pageable,
@@ -65,6 +69,7 @@ public class PostController {
         }
     }
 
+    @ApiOperation(value = "게시글 상세 보기")
     @GetMapping("/auth/post/{id}")
     public ResponseEntity<?> postDetails(@PathVariable Long id) {
         try {
@@ -75,6 +80,7 @@ public class PostController {
         }
     }
 
+    @ApiOperation(value = "게시글 수정할때 기존 내용 불러오기")
     @GetMapping("/auth/post/details/{id}")
     public ResponseEntity<?> postDetailModify(@PathVariable Long id) {
         try {
@@ -85,6 +91,7 @@ public class PostController {
         }
     }
 
+    @ApiOperation(value = "제목에 포함된 내용 검색하기")
     @GetMapping("/auth/post/search")
     public ResponseEntity<?> postSearch(
             @PageableDefault(size = PAGE_SIZE, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable,
