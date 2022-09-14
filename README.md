@@ -24,3 +24,6 @@
 
 ### Diagram
 ![제목 없는 다이어그램 drawio](https://user-images.githubusercontent.com/58351498/190075058-9015e1a1-6f76-433b-9919-2f02201d49ef.png)
+
+### ERD
+![diagram](https://user-images.githubusercontent.com/58351498/190099409-198dad5e-2552-4a5e-8bfa-6bbcea688def.png)
