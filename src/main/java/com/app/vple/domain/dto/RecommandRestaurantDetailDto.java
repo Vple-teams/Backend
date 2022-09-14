@@ -1,10 +1,10 @@
 package com.app.vple.domain.dto;
 
 import com.app.vple.domain.RecommandRestaurant;
-import com.app.vple.domain.enums.VeganType;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +39,17 @@ public class RecommandRestaurantDetailDto {
 
     private String image;
 
-    private VeganType veganType;
+    private List<String> veganTypes = new ArrayList<String>();
 
-    private List<ReviewDto> reviews;
+    public List<String> veganTypeList(List<String> veganTypes) {
+        for (int i=0; i < this.menus.size(); i++) {
+            String veganType = this.menus.get(i).getVeganType();
 
-    private HashTagDto hashTags;
+            if (!veganTypes.contains(veganType))
+                veganTypes.add(veganType);
+        }
+        return veganTypes;
+    }
 
     public RecommandRestaurantDetailDto(RecommandRestaurant entity) {
         this.id = entity.getId();
@@ -62,8 +68,6 @@ public class RecommandRestaurantDetailDto {
         ).collect(Collectors.toList());
         this.rating = entity.getRating();
         this.image = entity.getImage();
-        this.veganType = entity.getVeganType();
-        this.reviews = entity.getReviews().stream().map(ReviewDto::new).collect(Collectors.toList());
-        this.hashTags = new HashTagDto(entity.getReviews(), false);
+        this.veganTypes = veganTypeList(veganTypes);
     }
 }

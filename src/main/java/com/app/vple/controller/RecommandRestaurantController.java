@@ -24,7 +24,7 @@ public class RecommandRestaurantController {
 
     private final RecommandRestaurantService recommandRestaurantService;
 
-    private final int PAGE_SIZE = 20;
+    private final int PAGE_SIZE = 12;
 
     @GetMapping
     public ResponseEntity<?> recommandRestaurantList(

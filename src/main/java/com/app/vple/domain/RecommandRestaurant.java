@@ -33,10 +33,10 @@ public class RecommandRestaurant {
 
     private Float rating;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private String latitude;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private String longitude;
 
     @Column(nullable = false)
@@ -52,9 +52,6 @@ public class RecommandRestaurant {
 
     @OneToMany(mappedBy = "recommandRestaurant")
     private List<Menu> menus;
-
-    @Enumerated(EnumType.STRING)
-    private VeganType veganType;
 
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantReview> reviews;
