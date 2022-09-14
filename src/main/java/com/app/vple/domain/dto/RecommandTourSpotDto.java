@@ -27,7 +27,7 @@ public class RecommandTourSpotDto {
     private String title;
 
     public RecommandTourSpotDto(Item item) {
-        this.addr1 = item.addr1;
+        this.addr1 = item.addr1 + item.addr2;
         this.firstimage = item.firstimage;
         this.firstimage2 = item.firstimage2;
         this.mapx = item.mapx;
