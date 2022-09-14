@@ -6,6 +6,7 @@ import com.app.vple.domain.dto.CommentUploadDto;
 import com.app.vple.domain.dto.MyCommentsDto;
 import com.app.vple.service.CommentService;
 import com.app.vple.service.model.SessionLoginUser;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class CommentController {
 
     private final HttpSession httpSession;
 
+    @ApiOperation(value = "유저가 달은 모든 댓글 보기")
     @GetMapping
     public ResponseEntity<?> commentList() {
         try {
@@ -35,6 +37,7 @@ public class CommentController {
         }
     }
 
+    @ApiOperation(value = "게시글에 댓글달기")
     @PostMapping
     public ResponseEntity<?> commentAdd(@Validated @RequestBody CommentUploadDto comment) {
         try {
@@ -46,6 +49,7 @@ public class CommentController {
         }
     }
 
+    @ApiOperation(value = "댓글 삭제하기")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> commentRemove(@PathVariable Long id) {
         try {
@@ -57,6 +61,7 @@ public class CommentController {
         }
     }
 
+    @ApiOperation(value = "댓글 수정하기")
     @PatchMapping("/{id}")
     public ResponseEntity<?> commentModify(@PathVariable Long id,
                                            @Validated @RequestBody CommentUpdateDto commentUpdateDto) {

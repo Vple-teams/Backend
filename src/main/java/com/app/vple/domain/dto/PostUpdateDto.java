@@ -1,5 +1,6 @@
 package com.app.vple.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,14 +13,18 @@ public class PostUpdateDto {
 
     @NotBlank(message = "제목이 필요합니다.")
     @Size(min = 2, max = 20, message = "제목의 길이는 최소 2부터 최대 20까지입니다.")
+    @ApiModelProperty(example = "게시글 제목")
     private String title;
 
+    @ApiModelProperty(example = "게시글 내용")
     @NotNull(message = "본문이 비어있습니다.")
     @Size(min = 2)
     private String html;
 
+    @ApiModelProperty(example = "게시글 카테고리 0: 일반, 1: 후기")
     @NotNull(message = "게시글의 카테고리가 필요합니다.")
     private boolean isReviewPost;
 
+    @ApiModelProperty(example = "게시글 해시태그 리스트로 받음")
     private List<String> hashTags;
 }

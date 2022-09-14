@@ -2,6 +2,7 @@ package com.app.vple.controller;
 
 import com.app.vple.service.UserFollowService;
 import com.app.vple.service.model.SessionLoginUser;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class UserFollowController {
 
     private final HttpSession httpSession;
 
+    @ApiOperation(value = "유저 follow")
     @PostMapping("/{toUserId}")
     public ResponseEntity<?> follow(@PathVariable Long toUserId) {
         try {
@@ -29,6 +31,7 @@ public class UserFollowController {
         }
     }
 
+    @ApiOperation(value = "유저 unfollow")
     @DeleteMapping("/{toUserId}")
     public ResponseEntity<?> unfollow(@PathVariable Long toUserId) {
         try {

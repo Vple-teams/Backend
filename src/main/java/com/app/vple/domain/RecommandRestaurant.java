@@ -1,10 +1,7 @@
 package com.app.vple.domain;
 
 import com.app.vple.domain.enums.VeganType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;

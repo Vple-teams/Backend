@@ -4,6 +4,7 @@ import com.app.vple.domain.dto.AddMateDto;
 import com.app.vple.domain.dto.MateInfoDto;
 import com.app.vple.service.MateService;
 import com.app.vple.service.model.SessionLoginUser;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class MateController {
 
     private final HttpSession httpSession;
 
+    @ApiOperation(value = "메이트 기능 활성화")
     @PostMapping
     public ResponseEntity<?> addMate(@RequestBody AddMateDto mateInfo) {
         try {
@@ -32,6 +34,7 @@ public class MateController {
         }
     }
 
+    @ApiOperation(value = "메이트 기능 비활성화")
     @DeleteMapping
     public ResponseEntity<?> deleteMate() {
         try {
@@ -43,6 +46,7 @@ public class MateController {
         }
     }
 
+    @ApiOperation(value = "메이트 찾기 반경 500미터")
     @GetMapping
     public ResponseEntity<?> findMate() {
         try {

@@ -1,6 +1,7 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.dto.RecommandRestaurantListDto;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ public class RecommandRestaurantController {
 
     private final int PAGE_SIZE = 20;
 
+    @ApiOperation(value = "추천 식당 모아보기")
     @GetMapping
     public ResponseEntity<?> recommandRestaurantList(
             @PageableDefault(size = PAGE_SIZE, sort = "rating", direction = Sort.Direction.DESC)Pageable pageable) {
@@ -37,6 +39,7 @@ public class RecommandRestaurantController {
         }
     }
 
+    @ApiOperation(value = "추천 식당 상세 보기")
     @GetMapping("/{id}")
     public ResponseEntity<?> recommandRestaurantDetails(@PathVariable Long id) {
         try {

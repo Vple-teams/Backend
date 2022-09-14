@@ -1,11 +1,9 @@
 package com.app.vple.controller;
 
 import com.app.vple.domain.dto.RecommandTourSpotDto;
-import com.app.vple.service.GeoCodingService;
-import com.app.vple.service.model.Geocoding.Results;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.vple.domain.dto.RecommandTourSpotDetailDto;
@@ -22,6 +20,7 @@ public class RecommandTourSpotController {
 
     private final RecommandTourSpotService recommandTourSpotService;
 
+    @ApiOperation(value = "추천 관광지 상세보기, 디비에 저장되어 있지 않아서 값 필요")
     @GetMapping("/details")
     public ResponseEntity<?> recommandTourSpotDetails(@RequestParam("keyword") String keyword,
                                                       @RequestParam("latitude") String latitude,
@@ -34,6 +33,7 @@ public class RecommandTourSpotController {
         }
     }
 
+    @ApiOperation(value = "시 & 구 / 시 & 동으로 해당 지역 관광지 보기")
     @GetMapping
     public ResponseEntity<?> findTourSpotList(@RequestParam String city, @RequestParam String district, @RequestParam(defaultValue = "1") String pageNo) {
         try {
@@ -44,6 +44,7 @@ public class RecommandTourSpotController {
         }
     }
 
+    @ApiOperation(value = "해당 시의 관광지 모두 보기")
     @GetMapping("/all")
     public ResponseEntity<?> findTourSpotList(@RequestParam String city, @RequestParam(defaultValue = "1") String pageNo) {
         try {
