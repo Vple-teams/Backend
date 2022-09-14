@@ -22,24 +22,22 @@ public class RecommandTourSpotController {
 
     private final RecommandTourSpotService recommandTourSpotService;
 
-    private final GeoCodingService geoCodingService;
-
     @GetMapping("/details")
     public ResponseEntity<?> recommandTourSpotDetails(@RequestParam("keyword") String keyword,
                                                       @RequestParam("latitude") String latitude,
                                                       @RequestParam("longitude") String longitude) {
         try {
-            RecommandTourSpotDetailDto recommandTourSpot = recommandTourSpotService.findRecommandTourSpotDetails(keyword, latitude, longitude);
-            return new ResponseEntity<>(recommandTourSpot, HttpStatus.OK);
+            RecommandTourSpotDetailDto tourspot = recommandTourSpotService.findRecommandTourSpotDetails(keyword, latitude, longitude);
+            return new ResponseEntity<>(tourspot, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
-    public ResponseEntity<?> findTourSpotList(@RequestParam String city, @RequestParam String district) {
+    public ResponseEntity<?> findTourSpotList(@RequestParam String city, @RequestParam String district, @RequestParam(defaultValue = "1") String pageNo) {
         try {
-            List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCityAndDistrict(city, district);
+            List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCityAndDistrict(city, district, pageNo);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("tour api 호출에 실패했습니다.", HttpStatus.BAD_REQUEST);
@@ -47,9 +45,9 @@ public class RecommandTourSpotController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> findTourSpotList(@RequestParam String city) {
+    public ResponseEntity<?> findTourSpotList(@RequestParam String city, @RequestParam(defaultValue = "1") String pageNo) {
         try {
-            List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCity(city);
+            List<RecommandTourSpotDto> results = recommandTourSpotService.findTourSpotListByCity(city, pageNo);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("tour api 호출에 실패했습니다.", HttpStatus.BAD_REQUEST);

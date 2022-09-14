@@ -37,9 +37,9 @@ public class RecommandTourSpotService {
 
     private final String PREFIX_URL = "http://apis.data.go.kr/B551011/KorService/areaBasedList?serviceKey=";
 
-    private final String PREFIX_URL2 = "http://apis.data.go.kr/B551011/KorService/searchKeyword?serviceKey=";
+    private final String PAGE_NO = "&pageNo=";
 
-    private final String INORDER_URL = "&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&areaCode=";
+    private final String INORDER_URL = "&numOfRows=20&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&areaCode=";
 
     @Value("${encodingKey}")
     private String serviceKey;
@@ -101,21 +101,21 @@ public class RecommandTourSpotService {
         return new RecommandTourSpotDetailDto(tourSpot);
     }
 
-    public List<RecommandTourSpotDto> findTourSpotListByCityAndDistrict(String city, String district) throws IOException {
+    public List<RecommandTourSpotDto> findTourSpotListByCityAndDistrict(String city, String district, String pageNo) throws IOException {
         AreaCode areaCodeInfo = areaCodeRepository.getByCityAndDistrict(city, district);
         Long areaCode = areaCodeInfo.getCityCode();
         Long sigunguCode = areaCodeInfo.getDistrictCode();
 
-        String URL = PREFIX_URL + serviceKey + INORDER_URL + areaCode + "&contentTypeId=12&sigunguCode=" + sigunguCode;
+        String URL = PREFIX_URL + serviceKey + PAGE_NO + pageNo + INORDER_URL + areaCode + "&contentTypeId=12&sigunguCode=" + sigunguCode;
         return callTourApi(URL);
     }
 
-    public List<RecommandTourSpotDto> findTourSpotListByCity(String city) throws IOException {
+    public List<RecommandTourSpotDto> findTourSpotListByCity(String city, String pageNo) throws IOException {
         List<AreaCode> areaCodes = areaCodeRepository.findByCity(city);
 
         Long areaCode = areaCodes.get(0).getCityCode();
 
-        String URL = PREFIX_URL + serviceKey + INORDER_URL + areaCode + "&contentTypeId=12";
+        String URL = PREFIX_URL + serviceKey + PAGE_NO + pageNo + INORDER_URL + areaCode + "&contentTypeId=12";
         return callTourApi(URL);
     }
 
@@ -151,8 +151,9 @@ public class RecommandTourSpotService {
     }
 
     private RecommandTourSpotDto searchByKeyword(String keyword, Long areaCode, Long sigunguCode) throws IOException {
+        String PREFIX_URL2 = "http://apis.data.go.kr/B551011/KorService/searchKeyword?serviceKey=";
         String URL = PREFIX_URL2 + serviceKey
-                +"&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=VPLE&_type=json&listYN=Y&arrange=C&areaCode="+ areaCode+"&sigunguCode="+ sigunguCode +"&keyword="
+                +PAGE_NO + "1" + INORDER_URL + areaCode + "&sigunguCode="+ sigunguCode +"&keyword="
                 + URLEncoder.encode(keyword, StandardCharsets.UTF_8);
 
         List<RecommandTourSpotDto> results = callTourApi(URL);
